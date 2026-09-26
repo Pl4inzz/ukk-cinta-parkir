@@ -14,21 +14,38 @@
         })();
     </script>
 
-    {{-- Bootstrap 5.3.8 -- file lokal, tidak butuh internet --}}
+    {{-- Bootstrap 5.3.8 & App CSS --}}
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden;
+        }
+    </style>
 </head>
-<body class="d-flex flex-column min-vh-100 bg-body-tertiary">
+<body class="bg-body-tertiary">
 
-@include('partials.navbar')
+    <!-- Wrapper utama flexbox sejajar samping (Horizontal) -->
+    <div class="d-flex min-vh-100 align-items-stretch">
 
-<main class="container flex-grow-1 py-4 py-lg-5">
-    @include('partials.flash')
+        <!-- Include Sidebar/Navbar dari partials/navbar.sakuci.php -->
+        @include('partials.navbar')
 
-    @yield('content')
-</main>
+        <!-- Container Konten Utama di Sebelah Kanan Navigasi -->
+        <div class="d-flex flex-column flex-grow-1 min-vw-0 overflow-y-auto" style="max-height: 100vh;">
+            <main class="flex-grow-1 p-4 p-lg-5">
+                @include('partials.flash')
 
-@include('partials.footer')
+                @yield('content')
+            </main>
+
+            @include('partials.footer')
+        </div>
+
+    </div>
 
 <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/theme.js') }}"></script>

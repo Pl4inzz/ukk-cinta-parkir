@@ -1,12 +1,18 @@
 ﻿/*
 | Lapisan tema di atas Bootstrap.
 | Bootstrap dimuat lebih dulu, file ini hanya menimpa seperlunya.
+| Tema: Modern Emerald Green (Aplikasi Parkir)
 */
 
 :root {
-    --brand: #c2410c;
-    --brand-dark: #9a3412;
-    --brand-subtle: #fff7ed;
+    /* Brand Emerald Green */
+    --brand: #059669;          /* Emerald 600 */
+    --brand-dark: #047857;     /* Emerald 700 */
+    --brand-subtle: #ecfdf5;   /* Emerald 50 */
+
+    /* Override Bootstrap primary agar ikut warna brand */
+    --bs-primary: #059669;
+    --bs-primary-rgb: 5, 150, 105;
 }
 
 body {
@@ -26,16 +32,18 @@ body {
     font-weight: 700;
 }
 
-/* Navbar -- link aktif vs non-aktif */
-.navbar-nav .nav-link {
+/* Navbar & Sidebar -- link aktif vs non-aktif */
+.navbar-nav .nav-link,
+.nav-pills .nav-link {
     position: relative;
     font-weight: 500;
     color: var(--bs-secondary-color);
     padding-block: .5rem;
-    transition: color .15s ease;
+    transition: color .15s ease, background-color .15s ease;
 }
 
-.navbar-nav .nav-link:hover {
+.navbar-nav .nav-link:hover,
+.nav-pills .nav-link:hover:not(.btn-brand) {
     color: var(--brand);
 }
 
@@ -89,17 +97,18 @@ body {
 
 /* Tombol warna khas Sakuci */
 .btn-brand {
-    background-color: var(--brand);
-    border-color: var(--brand);
-    color: #fff;
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #fff !important;
+    transition: all .15s ease-in-out;
 }
 
 .btn-brand:hover,
 .btn-brand:focus,
 .btn-brand:active {
-    background-color: var(--brand-dark);
-    border-color: var(--brand-dark);
-    color: #fff;
+    background-color: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+    color: #fff !important;
 }
 
 .btn-outline-brand {
@@ -112,7 +121,7 @@ body {
     color: #fff;
 }
 
-.text-brand   { color: var(--brand) !important; }
+.text-brand       { color: var(--brand) !important; }
 .bg-brand-subtle { background-color: var(--brand-subtle) !important; }
 
 .badge-brand {
@@ -183,7 +192,7 @@ code.inline {
 .demo-box {
     padding: .6rem .5rem;
     background: var(--brand-subtle);
-    border: 1px solid #fdba8c;
+    border: 1px solid #a7f3d0;
     border-radius: 6px;
     color: var(--brand-dark);
     font-size: .8rem;
@@ -205,14 +214,43 @@ code.inline {
     color: var(--brand);
 }
 
-/* Varian tema gelap untuk komponen yang warnanya di-hardcode di atas */
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand);
+}
+
+/* =========================================================
+   VARIAN TEMA GELAP (DARK MODE)
+   ========================================================= */
+
+[data-bs-theme="dark"] {
+    /* Emerald Neon yang nyaman untuk Dark Mode */
+    --brand: #10b981;          /* Emerald 500 */
+    --brand-dark: #059669;     /* Emerald 600 */
+    --brand-subtle: rgba(16, 185, 129, 0.18);
+    
+    --bs-primary: #10b981;
+}
+
 [data-bs-theme="dark"] code.inline {
     background: #1e293b;
     color: #e2e8f0;
 }
 
-/* pre.code sengaja navy gelap di mode terang (biar kontras) -- tapi di mode
-   gelap dia harus ikut warna permukaan Bootstrap, bukan navy sendiri. */
 [data-bs-theme="dark"] pre.code {
     background: var(--bs-tertiary-bg);
     color: var(--bs-body-color);
@@ -240,19 +278,18 @@ code.inline {
 [data-bs-theme="dark"] .badge-brand,
 [data-bs-theme="dark"] .bg-brand-subtle,
 [data-bs-theme="dark"] .step-number {
-    background-color: rgba(194, 65, 12, .18) !important;
-    color: #fb923c;
+    background-color: rgba(16, 185, 129, 0.18) !important;
+    color: #34d399;
 }
 
 [data-bs-theme="dark"] .demo-box {
-    background-color: rgba(194, 65, 12, .18);
-    border-color: rgba(194, 65, 12, .4);
-    color: #fb923c;
+    background-color: rgba(16, 185, 129, 0.18);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #34d399;
 }
 
 [data-bs-theme="dark"] .demo-box-alt {
-    background-color: rgba(99, 102, 241, .18);
-    border-color: rgba(99, 102, 241, .4);
+    background-color: rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.4);
     color: #a5b4fc;
 }
-

@@ -6,6 +6,7 @@ use App\Controllers\Core\DatabaseController;
 use App\Controllers\Core\DocsController;
 use App\Controllers\Core\RoleController;
 use App\Controllers\Core\UserController;
+use App\Controllers\AreaParkirController;
 use Sakuci\Route;
 
 /*
@@ -54,6 +55,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
 
     Route::get('/database/export', [DatabaseController::class, 'export'])->name('admin.database.export');
+
+    //Tarif Routes
+    Route::get('/tarif', [\App\Controllers\TarifController::class, 'index'])->name('admin.tarif.index');
+    Route::get('/tarif/create', [\App\Controllers\TarifController::class, 'create'])->name('admin.tarif.create');
+    Route::post('/tarif', [\App\Controllers\TarifController::class, 'store'])->name('admin.tarif.store');
+    Route::get('/tarif/{id}/edit', [\App\Controllers\TarifController::class, 'edit'])->name('admin.tarif.edit');
+    Route::put('/tarif/{id}', [\App\Controllers\TarifController::class, 'update'])->name('admin.tarif.update');
+    Route::delete('/tarif/{id}', [\App\Controllers\TarifController::class, 'destroy'])->name('admin.tarif.destroy');
+
+    //Area Routes
+    Route::get('/area', [AreaParkirController::class, 'index'])->name('area.index');
+    Route::get('/area/create', [AreaParkirController::class, 'create'])->name('area.create');
+    Route::post('/area', [AreaParkirController::class, 'store'])->name('area.store');
+    Route::get('/area/{id}/edit', [AreaParkirController::class, 'edit'])->name('area.edit');
+    Route::put('/area/{id}', [AreaParkirController::class, 'update'])->name('area.update');
+    Route::delete('/area/{id}', [AreaParkirController::class, 'destroy'])->name('area.destroy');
 });
 
 /*
@@ -66,6 +83,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 */
 // @generated-roles:start
 
+// @role:owner:start
+Route::group(['prefix' => 'owner', 'middleware' => 'owner'], function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('owner.dashboard');
+});
+// @role:owner:end
+// @role:petugas:start
+Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('petugas.dashboard');
+});
+// @role:petugas:end
 // @generated-roles:end
 
 /*
