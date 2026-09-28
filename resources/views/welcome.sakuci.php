@@ -5,7 +5,6 @@
 @section('content')
 
     {{-- Hero / Quick Status Banner --}}
-    <section class="py-4 mb-4">
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
                 <span class="badge rounded-pill badge-brand px-3 py-2 mb-2">Sakuci Parking System v1.0</span>
@@ -60,7 +59,6 @@
                 </div>
             </div>
         </div>
-    </section>
 
     {{-- Akses Cepat Modul Utama --}}
     <section class="mb-5">

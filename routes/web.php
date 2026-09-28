@@ -53,6 +53,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('core.admin.users.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('core.admin.users.destroy');
+    
 
     Route::get('/database/export', [DatabaseController::class, 'export'])->name('admin.database.export');
 
@@ -71,6 +75,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/area/{id}/edit', [AreaParkirController::class, 'edit'])->name('area.edit');
     Route::put('/area/{id}', [AreaParkirController::class, 'update'])->name('area.update');
     Route::delete('/area/{id}', [AreaParkirController::class, 'destroy'])->name('area.destroy');
+
+    //Member Routes
+    Route::get('/admin/members', [MemberController::class, 'index'])->name('members.index');
+    Route::get('/admin/members/create', [MemberController::class, 'create'])->name('members.create');
+    Route::post('/admin/members', [MemberController::class, 'store'])->name('members.store');
+    Route::get('/admin/members/{id}/edit', [MemberController::class, 'edit'])->name('members.edit');
+    Route::put('/admin/members/{id}', [MemberController::class, 'update'])->name('members.update');
+    Route::delete('/admin/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
 });
 
 /*

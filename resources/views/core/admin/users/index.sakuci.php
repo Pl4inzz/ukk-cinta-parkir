@@ -28,6 +28,11 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
+                            <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label" for="password">Password</label>
                             <input type="password" id="password" name="password" class="form-control {{ errors()->has('password') ? 'is-invalid' : '' }}">
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -41,7 +46,6 @@
                                 @endforeach
                             </select>
                             @error('role') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            <div class="form-text">Butuh role lain? Tambahkan dulu di <a href="{{ route('admin.roles.index') }}">Manage Role</a>.</div>
                         </div>
 
                         <button class="btn btn-brand w-100" type="submit">Tambah User</button>
@@ -60,7 +64,9 @@
                             <tr>
                                 <th>#</th>
                                 <th>Username</th>
+                                <th>Nama Lengkap</th>
                                 <th>Role</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,7 +74,18 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->username }}</td>
+                                    <td>{{ $item->nama_lengkap }}</td>
                                     <td><code class="inline">{{ $item->role }}</code></td>
+                                    <td>
+                                    <div class="d-inline-flex gap-2">
+                                        <a href="{{ route('core.admin.users.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-brand">Edit</a>
+                                        <form method="POST" action="{{ route('core.admin.users.destroy', ['id' => $item->id]) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus area ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger" type="submit">Hapus</button>
+                                        </form>
+                                    </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

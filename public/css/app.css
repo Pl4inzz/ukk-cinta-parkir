@@ -1,4 +1,4 @@
-﻿/*
+/*
 | Lapisan tema di atas Bootstrap.
 | Bootstrap dimuat lebih dulu, file ini hanya menimpa seperlunya.
 | Tema: Modern Emerald Green (Aplikasi Parkir)
@@ -292,4 +292,57 @@ code.inline {
     background-color: rgba(99, 102, 241, 0.18);
     border-color: rgba(99, 102, 241, 0.4);
     color: #a5b4fc;
+}
+
+/* Style Dasar Sidebar */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    z-index: 1050;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Responsif untuk Tampilan HP (< 992px) */
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        /* Tersembunyi secara bawaan ke luar layar kiri */
+        transform: translateX(-100%);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Hanya muncul saat diberi class .show melalui JS */
+    .sidebar.show {
+        transform: translateX(0) !important;
+    }
+
+    /* Overlay latar belakang gelap */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+}
+
+/* Tampilan Desktop (>= 992px) Sidebar tetap berdampingan dengan konten */
+@media (min-width: 992px) {
+    .sidebar {
+        position: sticky !important;
+        top: 0;
+        transform: none !important;
+    }
+    .sidebar-overlay {
+        display: none !important;
+    }
 }

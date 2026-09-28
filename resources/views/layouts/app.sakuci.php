@@ -24,18 +24,27 @@
             margin: 0;
             overflow-x: hidden;
         }
+        .ezpark-content {
+            min-width: 0;
+        }
+
+        @media (min-width: 992px) {
+            .ezpark-content {
+                max-height: 100vh;
+            }
+        }
     </style>
 </head>
 <body class="bg-body-tertiary">
 
     <!-- Wrapper utama flexbox sejajar samping (Horizontal) -->
-    <div class="d-flex min-vh-100 align-items-stretch">
+    <div class="d-flex flex-column flex-lg-row min-vh-100 align-items-stretch">
 
         <!-- Include Sidebar/Navbar dari partials/navbar.sakuci.php -->
         @include('partials.navbar')
 
         <!-- Container Konten Utama di Sebelah Kanan Navigasi -->
-        <div class="d-flex flex-column flex-grow-1 min-vw-0 overflow-y-auto" style="max-height: 100vh;">
+        <div class="ezpark-content d-flex flex-column flex-grow-1 overflow-y-auto">
             <main class="flex-grow-1 p-4 p-lg-5">
                 @include('partials.flash')
 
@@ -46,6 +55,8 @@
         </div>
 
     </div>
+
+    
 
 <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/theme.js') }}"></script>
