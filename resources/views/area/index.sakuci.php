@@ -57,9 +57,10 @@
                         </thead>
                         <tbody>
                             @if (isset($areaList) && count($areaList) > 0)
+                            @php $np = 1; @endphp
                                 @foreach ($areaList as $item)
                                     <tr>
-                                        <td>{{ $item->id_area }}</td>
+                                        <td>{{ $no++ }}</td>
                                         <td>
                                             <span class="fw-medium">{{ $item->nama_area }}</span>
                                         </td>

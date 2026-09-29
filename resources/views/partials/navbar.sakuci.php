@@ -120,17 +120,22 @@
                 <!-- Menu Khusus Petugas -->
                 @elseif ($currentUser->role === 'petugas')
                     <li class="nav-item">
-                        <a href="{{ route('petugas.transaksi.index') }}" class="nav-link rounded-3 {{ is_route('petugas.transaksi.*') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
+                        <a href="{{ route('dashboard') }}" class="nav-link rounded-3 {{ is_route('dashboard') ? 'btn-brand text-white fw-semibold' : 'text-body' }} ">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link rounded-3 ">
                             Transaksi Parkir
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('petugas.transaksi.masuk') }}" class="nav-link rounded-3 {{ is_route('petugas.transaksi.masuk') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
+                        <a href="" class="nav-link rounded-3 ">
                             Parkir Masuk
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('petugas.transaksi.keluar') }}" class="nav-link rounded-3 {{ is_route('petugas.transaksi.keluar') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
+                        <a href="" class="nav-link rounded-3 ">
                             Parkir Keluar
                         </a>
                     </li>
@@ -138,7 +143,7 @@
                 <!-- Menu Khusus Owner -->
                 @elseif ($currentUser->role === 'owner')
                     <li class="nav-item">
-                        <a href="{{ route('owner.laporan.index') }}" class="nav-link rounded-3 {{ is_route('owner.laporan.*') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
+                        <a href="{{ route('owner.laporan.index') }}" class="nav-link rounded-3 ">
                             Rekap Laporan
                         </a>
                     </li>

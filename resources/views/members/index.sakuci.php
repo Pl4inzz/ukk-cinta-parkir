@@ -58,7 +58,7 @@
                             @error('plat_nomor') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        <!-- Jenis Kendaraan (Varchar / Input Text) -->
+                        <!-- Jenis Kendaraan (VARCHAR) -->
                         <div class="mb-3">
                             <label class="form-label" for="jenis_kendaraan">Jenis Kendaraan</label>
                             <input type="text" 
@@ -68,6 +68,24 @@
                                    placeholder="Contoh: motor, mobil, truk" 
                                    class="form-control {{ errors()->has('jenis_kendaraan') ? 'is-invalid' : '' }}">
                             @error('jenis_kendaraan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <!-- Pilih Petugas Pendaftar -->
+                        <div class="mb-3">
+                            <label class="form-label" for="id_user">Petugas Pendaftar <small class="text-muted">(Opsional)</small></label>
+                            <select id="id_user" 
+                                    name="id_user" 
+                                    class="form-select {{ errors()->has('id_user') ? 'is-invalid' : '' }}">
+                                <option value="">-- Pilih Petugas --</option>
+                                @if (isset($users) && count($users) > 0)
+                                    @foreach ($users as $u)
+                                        <option value="{{ $u->id_user ?? $u->id }}" {{ old('id_user') == ($u->id_user ?? $u->id) ? 'selected' : '' }}>
+                                            {{ $u->nama_lengkap ?? $u->username }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            @error('id_user') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         <!-- No HP -->
@@ -82,18 +100,17 @@
                             @error('no_hp') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        <!-- Status Member -->
+                        <!-- Status Aktif -->
                         <div class="mb-3">
                             <label class="form-label" for="status_aktif">Status Member</label>
-                                <select id="status_aktif" 
-                                            name="status_aktif" 
-                                                        class="form-select {{ errors()->has('status_aktif') ? 'is-invalid' : '' }}">
-                                                                <option value="aktif" {{ old('status_aktif', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                                                        <option value="nonaktif" {{ old('status_aktif') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                                                                            </select>
-                                                                                @error('status_aktif') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                                                </div>
-                                                                                
+                            <select id="status_aktif" 
+                                    name="status_aktif" 
+                                    class="form-select {{ errors()->has('status_aktif') ? 'is-invalid' : '' }}">
+                                <option value="aktif" {{ old('status_aktif', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="nonaktif" {{ old('status_aktif') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                            </select>
+                            @error('status_aktif') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
 
                         <!-- Tanggal Kadaluarsa -->
                         <div class="mb-3">
@@ -124,15 +141,17 @@
                                 <th>#</th>
                                 <th>Kode & Nama</th>
                                 <th>Kendaraan</th>
+                                <th>Petugas</th>
                                 <th>Status</th>
                                 <th class="text-end">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (isset($members) && count($members) > 0)
+                            @php $no = 1; @endphp
                                 @foreach ($members as $item)
                                     <tr>
-                                        <td>{{ $item->id_member ?? $item->id }}</td>
+                                        <td>{{ $no++ }}</td>
                                         <td>
                                             <span class="fw-medium d-block">{{ $item->nama }}</span>
                                             <small class="text-muted">{{ $item->kode_member }}</small>
@@ -140,6 +159,9 @@
                                         <td>
                                             <span class="d-block text-uppercase fw-semibold">{{ $item->plat_nomor }}</span>
                                             <span class="badge bg-secondary-subtle text-secondary">{{ ucfirst($item->jenis_kendaraan) }}</span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ $item->user->nama ?? $item->user->nama_lengkap ?? '-' }}</small>
                                         </td>
                                         <td>
                                             @if($item->status_aktif === 'aktif')
@@ -162,7 +184,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="5" class="text-secondary text-center py-3">Belum ada data member.</td>
+                                    <td colspan="6" class="text-secondary text-center py-3">Belum ada data member.</td>
                                 </tr>
                             @endif
                         </tbody>

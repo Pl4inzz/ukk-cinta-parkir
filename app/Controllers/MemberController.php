@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Sakuci\Controller;
 use Sakuci\Http\Request;
 use App\Models\Member;
+use App\Models\User;
 
 class MemberController extends Controller
 {
@@ -12,7 +13,8 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         $members = Member::all();
-        return view('members.index', compact('members'));
+        $users = User::all();
+        return view('members.index', compact('members', 'users'));
     }
 
     // 2. Menampilkan form tambah member
@@ -29,19 +31,20 @@ class MemberController extends Controller
             'nama'               => 'required|min:3|max:255',
             'plat_nomor'         => 'required|min:3|max:15',
             'jenis_kendaraan'    => 'required|string|max:50',
-            'no_hp'              => 'nullable|max:20',
+            'id_user'            => 'nullable', // Diizinkan menangkap pilihan petugas dari form
+            'no_hp'              => 'nullable',
             'status_aktif'       => 'required|in:aktif,nonaktif',
             'tanggal_kadaluarsa' => 'nullable|date',
         ]);
 
-        // Simpan id_user petugas yang sedang login jika ada session
-        if (session('user_id')) {
-            $data['id_user'] = session('user_id');
+        // Jika tidak ada petugas yang dipilih di dropdown, gunakan ID user yang sedang login
+        if (empty($data['id_user'])) {
+            $data['id_user'] = session('user_id') ?? null;
         }
 
         Member::create($data);
 
-        return redirect('/admin/members')->with('success', 'Member berhasil ditambahkan.');
+        return redirect()->route('members.index')->with('success', 'Member berhasil ditambahkan.');
     }
 
     // 4. Menampilkan form edit member
@@ -57,18 +60,18 @@ class MemberController extends Controller
         $member = Member::findOrFail($id);
 
         $data = $request->validate([
-            'kode_member'        => 'required|unique:member,kode_member,' . $id,
+            'kode_member'        => 'required|unique:member,kode_member,' . $id . ',id_member',
             'nama'               => 'required|min:3|max:255',
             'plat_nomor'         => 'required|min:3|max:15',
             'jenis_kendaraan'    => 'required|string|max:50',
-            'no_hp'              => 'nullable|string|max:20',
+            'no_hp'              => 'nullable',
             'status_aktif'       => 'required|in:aktif,nonaktif',
             'tanggal_kadaluarsa' => 'nullable|date',
         ]);
 
         $member->update($data);
 
-        return redirect('/admin/members')->with('success', 'Data member berhasil diperbarui.');
+        return redirect()->route('members.index')->with('success', 'Member berhasil ditambahkan.');
     }
 
     // 6. Memproses hapus member

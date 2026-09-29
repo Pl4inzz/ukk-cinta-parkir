@@ -57,9 +57,10 @@
                         </thead>
                         <tbody>
                             @if (count($tarifList) > 0)
+                            @php $no= 1; @endphp
                                 @foreach ($tarifList as $item)
                                     <tr>
-                                        <td>{{ $item->id_tarif }}</td>
+                                        <td>{{ $no++ }}</td>
                                         <td>
                                             <span class="text-capitalize fw-medium">{{ $item->jenis_kendaraan }}</span>
                                         </td>

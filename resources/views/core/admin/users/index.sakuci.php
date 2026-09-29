@@ -70,9 +70,10 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @php $no=1; @endphp
                             @forelse ($users as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $no++ }}</td>
                                     <td>{{ $item->username }}</td>
                                     <td>{{ $item->nama_lengkap }}</td>
                                     <td><code class="inline">{{ $item->role }}</code></td>
