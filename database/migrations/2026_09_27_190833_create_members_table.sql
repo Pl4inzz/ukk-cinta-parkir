@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS `member` (
     id_member          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_user            INT UNSIGNED NOT NULL,
+    id_user            INT UNSIGNED NULL,
     kode_member        VARCHAR(50) NOT NULL UNIQUE,
     nama               VARCHAR(255) NOT NULL,
     plat_nomor         VARCHAR(15) NOT NULL,

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tiket Parkir #{{ $transaksi->id_parkir }}</title>
+    <title>Struk Pembayaran #{{ $transaksi->id_parkir }}</title>
 
     <style>
         * {
@@ -47,7 +47,7 @@
         }
 
         .ticket-number {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             margin: 8px 0;
         }
@@ -66,13 +66,25 @@
             width: 42%;
         }
 
-        .notice {
-            margin-top: 12px;
-            padding: 8px 0;
-            text-align: center;
+        .total-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .total-label {
+            font-size: 13px;
             font-weight: bold;
-            border-top: 1px dashed #000;
-            border-bottom: 1px dashed #000;
+        }
+
+        .total-price {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .thank-you {
+            margin-top: 12px;
+            text-align: center;
         }
 
         .btn-print {
@@ -130,7 +142,7 @@
         <h1 class="title">EZPARK</h1>
 
         <p class="subtitle">
-            TIKET PARKIR
+            STRUK PEMBAYARAN PARKIR
         </p>
 
         <p class="ticket-number">
@@ -141,7 +153,7 @@
 
     <div class="line"></div>
 
-    <!-- INFORMASI PARKIR -->
+    <!-- INFORMASI KENDARAAN -->
     <table>
 
         <tr>
@@ -165,7 +177,7 @@
         <tr>
             <td>Plat Nomor</td>
             <td>
-                : {{ $transaksi->plat_nomor }}
+                : {{ $transaksi->plat_nomor ?? '-' }}
             </td>
         </tr>
 
@@ -187,6 +199,13 @@
             </td>
         </tr>
 
+    </table>
+
+    <div class="line"></div>
+
+    <!-- DETAIL PARKIR -->
+    <table>
+
         <tr>
             <td>Waktu Masuk</td>
             <td>
@@ -194,28 +213,74 @@
             </td>
         </tr>
 
+        <tr>
+            <td>Waktu Keluar</td>
+            <td>
+                : {{ $transaksi->waktu_keluar ?? '-' }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Durasi</td>
+            <td>
+                : {{ $transaksi->durasi_jam }} Jam
+            </td>
+        </tr>
+
+        <tr>
+            <td>Tarif / Jam</td>
+            <td>
+                :
+                Rp
+                {{ number_format(
+                    $transaksi->durasi_jam > 0
+                        ? ($transaksi->biaya_total / $transaksi->durasi_jam)
+                        : 0,
+                    0,
+                    ',',
+                    '.'
+                ) }}
+            </td>
+        </tr>
+
     </table>
 
     <div class="line"></div>
 
-    <!-- STATUS -->
-    <div class="notice">
+    <!-- TOTAL -->
+    <div class="total-box">
 
-        PARKIR AKTIF
-        <br>
-        SIMPAN TIKET INI
+        <table>
+
+            <tr>
+                <td class="total-label">
+                    TOTAL BAYAR
+                </td>
+
+                <td class="text-right total-price">
+                    Rp
+                    {{ number_format(
+                        $transaksi->biaya_total ?? 0,
+                        0,
+                        ',',
+                        '.'
+                    ) }}
+                </td>
+            </tr>
+
+        </table>
 
     </div>
 
-    <div class="text-center" style="margin-top: 12px;">
+    <!-- UCAPAN -->
+    <div class="thank-you">
 
         <p style="margin: 0;">
-            Tiket wajib dibawa saat
-            kendaraan keluar.
+            Terima Kasih
         </p>
 
-        <p style="margin: 5px 0 0;">
-            Terima kasih telah menggunakan EZPark.
+        <p style="margin: 4px 0 0;">
+            Selamat Sampai Tujuan
         </p>
 
     </div>
@@ -226,7 +291,7 @@
         <a
             href="javascript:window.print()"
             class="btn-print">
-            Cetak Tiket
+            Cetak Struk
         </a>
 
         <a

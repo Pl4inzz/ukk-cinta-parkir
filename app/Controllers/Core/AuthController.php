@@ -58,18 +58,52 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::firstWhere('username', $data['username']);
+        $user = User::firstWhere(
+            'username',
+            $data['username']
+        );
 
-        if (! $user || ! password_verify($data['password'], $user->password)) {
+        if (
+            !$user ||
+            !password_verify(
+                $data['password'],
+                $user->password
+            )
+        ) {
             return back()
-                ->withErrors(['username' => 'Username atau password salah.'])
+                ->withErrors([
+                    'username' => 'Username atau password salah.'
+                ])
                 ->withInput();
         }
 
-        Session::put('user_id', $user->id);
+        // Simpan user yang sedang login
+        Session::put(
+            'user_id',
+            $user->id
+        );
 
-        return redirect($user->role === 'admin' ? '/admin' : '/dashboard')
-            ->with('success', 'Selamat datang, ' . $user->username . '.');
+        // Tentukan dashboard berdasarkan role
+        if ($user->role === 'admin') {
+
+            $redirect = '/admin';
+
+        } elseif ($user->role === 'petugas') {
+
+            $redirect = '/petugas';
+
+        } else {
+
+            $redirect = '/dashboard';
+        }
+
+        return redirect($redirect)
+            ->with(
+                'success',
+                'Selamat datang, ' .
+                $user->username .
+                '.'
+            );
     }
 
     public function logout()

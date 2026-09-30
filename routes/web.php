@@ -8,6 +8,7 @@ use App\Controllers\Core\RoleController;
 use App\Controllers\Core\UserController;
 use App\Controllers\AreaParkirController;
 use App\Controllers\TransaksiController;
+use App\Controllers\MemberController;
 use Sakuci\Route;
 
 /*
@@ -77,13 +78,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::put('/area/{id}', [AreaParkirController::class, 'update'])->name('area.update');
     Route::delete('/area/{id}', [AreaParkirController::class, 'destroy'])->name('area.destroy');
 
-    //Member Routes
-    Route::get('/admin/members', [MemberController::class, 'index'])->name('members.index');
-    Route::get('/admin/members/create', [MemberController::class, 'create'])->name('members.create');
-    Route::post('/admin/members', [MemberController::class, 'store'])->name('members.store');
-    Route::get('/admin/members/{id}/edit', [MemberController::class, 'edit'])->name('members.edit');
-    Route::put('/admin/members/{id}', [MemberController::class, 'update'])->name('members.update');
-    Route::delete('/admin/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
+    // Member Routes
+    Route::get('/members', [MemberController::class, 'index'])->name('members.index');
+    Route::post('/members', [MemberController::class, 'store'])->name('members.store');
+    Route::get('/members/{id}/edit', [MemberController::class, 'edit'])->name('members.edit');
+    Route::put('/members/{id}', [MemberController::class, 'update'])->name('members.update');
+    Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
 });
 
 /*
@@ -108,15 +108,13 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
     Route::get('/', [DashboardController::class, 'petugas'])->name('petugas.dashboard');
 
     //Parkir Routes
-    Route::get('/petugas/transaksi', [TransaksiController::class, 'index'])->name('petugas.transaksi.index');
-    Route::get('/petugas/transaksi/masuk', [TransaksiController::class, 'createMasuk'])->name('petugas.transaksi.masuk');
-    Route::post('/petugas/transaksi/masuk', [TransaksiController::class, 'storeMasuk'])->name('petugas.transaksi.storeMasuk');
-
-    Route::get('/petugas/transaksi/{id}/keluar', [TransaksiController::class, 'editKeluar'])->name('petugas.transaksi.keluar');
-    Route::put('/petugas/transaksi/{id}/keluar', [TransaksiController::class, 'updateKeluar'])->name('petugas.transaksi.updateKeluar');
-
-    Route::get('/petugas/transaksi/{id}/tiket', [TransaksiController::class, 'cetakTiket'])->name('petugas.transaksi.cetakTiket');
-    Route::get('/petugas/transaksi/{id}/struk', [TransaksiController::class, 'cetakStruk'])->name('petugas.transaksi.cetakStruk');
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('petugas.transaksi.index');
+    Route::get('/transaksi/masuk', [TransaksiController::class, 'createMasuk'])->name('petugas.transaksi.masuk');
+    Route::post('/transaksi/masuk', [TransaksiController::class, 'storeMasuk'])->name('petugas.transaksi.storeMasuk');
+    Route::get('/transaksi/{id}/keluar', [TransaksiController::class, 'editKeluar'])->name('petugas.transaksi.keluar');
+    Route::post('/transaksi/{id}/keluar', [TransaksiController::class, 'updateKeluar'])->name('petugas.transaksi.updateKeluar');
+    Route::get('/transaksi/{id}/tiket', [TransaksiController::class, 'cetakTiket'])->name('petugas.transaksi.cetakTiket');
+    Route::get('/transaksi/{id}/struk', [TransaksiController::class, 'cetakStruk'])->name('petugas.transaksi.cetakStruk');
     
 });
 // @role:petugas:end
