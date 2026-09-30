@@ -62,20 +62,12 @@
                             @enderror
                         </div>
 
-                        <!-- Role -->
-                        <div class="mb-3">
-                            <label class="form-label" for="role">Role</label>
-                            <select id="role" 
-                                    name="role" 
-                                    class="form-select {{ errors()->has('role') ? 'is-invalid' : '' }}">
-                                <option value="">-- Pilih Role --</option>
-                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="petugas" {{ old('role', $user->role) == 'petugas' ? 'selected' : '' }}>Petugas</option>
-                            </select>
-                            @error('role')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+<!-- Role -->
+<div class="mb-3">
+    <label class="form-label" for="role">Role</label>
+    <input type="text" class="form-control" value="Petugas" readonly>
+    <input type="hidden" name="role" value="petugas">
+</div>
 
                         <!-- Tombol Aksi -->
                         <div class="d-flex gap-2">

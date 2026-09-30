@@ -52,12 +52,13 @@
                                 <th>#</th>
                                 <th>Nama Area</th>
                                 <th>Kapasitas</th>
+                                <th>Terisi</th>
                                 <th class="text-end">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (isset($areaList) && count($areaList) > 0)
-                            @php $np = 1; @endphp
+                            @php $no = 1; @endphp
                                 @foreach ($areaList as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
@@ -66,6 +67,9 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary-subtle text-secondary">{{ $item->kapasitas }} Slot</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary-subtle text-secondary">{{ $item->terisi }} Kendaraan</span>
                                         </td>
                                         <td class="text-end">
                                             <div class="d-inline-flex gap-2">
@@ -81,7 +85,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="4" class="text-secondary text-center py-3">Belum ada data area parkir.</td>
+                                    <td colspan="5" class="text-secondary text-center py-3">Belum ada data area parkir.</td>
                                 </tr>
                             @endif
                         </tbody>

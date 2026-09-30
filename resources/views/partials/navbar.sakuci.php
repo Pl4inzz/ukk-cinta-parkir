@@ -120,23 +120,13 @@
                 <!-- Menu Khusus Petugas -->
                 @elseif ($currentUser->role === 'petugas')
                     <li class="nav-item">
-                        <a href="{{ route('dashboard') }}" class="nav-link rounded-3 {{ is_route('dashboard') ? 'btn-brand text-white fw-semibold' : 'text-body' }} ">
+                        <a href="{{ route('petugas.dashboard') }}" class="nav-link rounded-3 {{ is_route('petugas.dashboard') ? 'btn-brand text-white fw-semibold' : 'text-body' }} ">
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link rounded-3 ">
+                        <a href="{{ route('petugas.transaksi.index') }}" class="nav-link rounded-3 {{ is_route('petugas.transaksi.index') ? 'btn-brand text-white fw-semibold' : 'text-body' }}" class="nav-link rounded-3 ">
                             Transaksi Parkir
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link rounded-3 ">
-                            Parkir Masuk
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link rounded-3 ">
-                            Parkir Keluar
                         </a>
                     </li>
 

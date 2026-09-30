@@ -7,6 +7,7 @@ use App\Controllers\Core\DocsController;
 use App\Controllers\Core\RoleController;
 use App\Controllers\Core\UserController;
 use App\Controllers\AreaParkirController;
+use App\Controllers\TransaksiController;
 use Sakuci\Route;
 
 /*
@@ -102,7 +103,21 @@ Route::group(['prefix' => 'owner', 'middleware' => 'owner'], function () {
 // @role:owner:end
 // @role:petugas:start
 Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('petugas.dashboard');
+
+    //Dashboard Routes
+    Route::get('/', [DashboardController::class, 'petugas'])->name('petugas.dashboard');
+
+    //Parkir Routes
+    Route::get('/petugas/transaksi', [TransaksiController::class, 'index'])->name('petugas.transaksi.index');
+    Route::get('/petugas/transaksi/masuk', [TransaksiController::class, 'createMasuk'])->name('petugas.transaksi.masuk');
+    Route::post('/petugas/transaksi/masuk', [TransaksiController::class, 'storeMasuk'])->name('petugas.transaksi.storeMasuk');
+
+    Route::get('/petugas/transaksi/{id}/keluar', [TransaksiController::class, 'editKeluar'])->name('petugas.transaksi.keluar');
+    Route::put('/petugas/transaksi/{id}/keluar', [TransaksiController::class, 'updateKeluar'])->name('petugas.transaksi.updateKeluar');
+
+    Route::get('/petugas/transaksi/{id}/tiket', [TransaksiController::class, 'cetakTiket'])->name('petugas.transaksi.cetakTiket');
+    Route::get('/petugas/transaksi/{id}/struk', [TransaksiController::class, 'cetakStruk'])->name('petugas.transaksi.cetakStruk');
+    
 });
 // @role:petugas:end
 // @generated-roles:end

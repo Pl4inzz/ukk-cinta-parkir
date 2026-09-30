@@ -4,12 +4,13 @@ namespace App\Controllers;
 
 use Sakuci\Controller;
 use Sakuci\Http\Request;
+use App\Models\Tarif;
 
 class TarifController extends Controller
 {
     public function index(Request $request)
     {
-        $tarifList = \App\Models\Tarif::all();
+        $tarifList = Tarif::all();
         return view('tarif.index', ['tarifList' => $tarifList]);
     }
 
@@ -21,13 +22,13 @@ class TarifController extends Controller
     public function store(Request $request)
     {
         $data = $request->only(['jenis_kendaraan', 'tarif_per_jam']);
-        \App\Models\Tarif::create($data);
+        Tarif::create($data);
         return redirect()->route('admin.tarif.index')->with('success', 'Tarif berhasil ditambahkan.');
     }
 
     public function edit(Request $request, $id)
     {
-        $tarif = \App\Models\Tarif::find($id);
+        $tarif = Tarif::find($id);
         if (!$tarif) {
             return redirect()->route('admin.tarif.index')->with('error', 'Tarif tidak ditemukan.');
         }
@@ -36,7 +37,7 @@ class TarifController extends Controller
 
     public function update(Request $request, $id)
     {
-        $tarif = \App\Models\Tarif::find($id);
+        $tarif = Tarif::find($id);
         if (!$tarif) {
             return redirect()->route('admin.tarif.index')->with('error', 'Tarif tidak ditemukan.');
         }
@@ -47,7 +48,7 @@ class TarifController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $tarif = \App\Models\Tarif::find($id);
+        $tarif = Tarif::find($id);
         if (!$tarif) {
             return redirect()->route('admin.tarif.index')->with('error', 'Tarif tidak ditemukan.');
         }

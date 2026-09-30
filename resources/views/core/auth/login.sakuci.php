@@ -21,12 +21,6 @@
             <div class="text-center mb-4">
                 <div class="brand-mark mx-auto mb-2" style="width: 44px; height: 44px; font-size: 20px;">P</div>
                 <h1 class="h4 fw-bold mb-1">Masuk ke Sistem</h1>
-                <p class="text-secondary small mb-0">Sistem Manajemen Parkir Sakuci</p>
-            </div>
-
-            {{-- Alert Informasi Akun Demo --}}
-            <div class="alert alert-brand border-0 bg-brand-subtle small mb-4 py-2 px-3 text-center">
-                <span class="text-brand">Akun demo:</span> <strong>admin</strong> &mdash; password <code class="inline">rahasia123</code>
             </div>
 
             {{-- Form Login --}}

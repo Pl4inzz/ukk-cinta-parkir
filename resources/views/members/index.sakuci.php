@@ -70,27 +70,16 @@
                             @error('jenis_kendaraan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        <!-- Pilih Petugas Pendaftar -->
+                        <!-- Pilih Pendaftar -->
                         <div class="mb-3">
-                            <label class="form-label" for="id_user">Petugas Pendaftar <small class="text-muted">(Opsional)</small></label>
-                            <select id="id_user" 
-                                    name="id_user" 
-                                    class="form-select {{ errors()->has('id_user') ? 'is-invalid' : '' }}">
-                                <option value="">-- Pilih Petugas --</option>
-                                @if (isset($users) && count($users) > 0)
-                                    @foreach ($users as $u)
-                                        <option value="{{ $u->id_user ?? $u->id }}" {{ old('id_user') == ($u->id_user ?? $u->id) ? 'selected' : '' }}>
-                                            {{ $u->nama_lengkap ?? $u->username }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
+                            <label class="form-label" for="id_user">Pendaftar</label>
+                            <input type="text" name="id_user" value="{{ $users->nama_lengkap }}" class="form-control" disabled>
                             @error('id_user') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         <!-- No HP -->
                         <div class="mb-3">
-                            <label class="form-label" for="no_hp">No. HP <small class="text-muted">(Opsional)</small></label>
+                            <label class="form-label" for="no_hp">No. HP</label>
                             <input type="text" 
                                    id="no_hp" 
                                    name="no_hp" 
@@ -114,7 +103,7 @@
 
                         <!-- Tanggal Kadaluarsa -->
                         <div class="mb-3">
-                            <label class="form-label" for="tanggal_kadaluarsa">Tanggal Kadaluarsa <small class="text-muted">(Opsional)</small></label>
+                            <label class="form-label" for="tanggal_kadaluarsa">Tanggal Kadaluarsa</label>
                             <input type="date" 
                                    id="tanggal_kadaluarsa" 
                                    name="tanggal_kadaluarsa" 
@@ -141,7 +130,7 @@
                                 <th>#</th>
                                 <th>Kode & Nama</th>
                                 <th>Kendaraan</th>
-                                <th>Petugas</th>
+                                <th>Pendaftar</th>
                                 <th>Status</th>
                                 <th class="text-end">Aksi</th>
                             </tr>

@@ -13,14 +13,8 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         $members = Member::all();
-        $users = User::all();
+        $users = User::current();
         return view('members.index', compact('members', 'users'));
-    }
-
-    // 2. Menampilkan form tambah member
-    public function create()
-    {
-        return view('members.create');
     }
 
     // 3. Memproses simpan data member baru

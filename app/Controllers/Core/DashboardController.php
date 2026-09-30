@@ -12,6 +12,11 @@ class DashboardController extends Controller
         return view('core.dashboard', ['user' => User::current()]);
     }
 
+    public function petugas()
+    {
+        return view('petugas.dashboard', ['user' => User::current()]);
+    }
+
     public function admin()
     {
         return view('core.admin.dashboard', ['user' => User::current()]);

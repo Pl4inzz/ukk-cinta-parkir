@@ -38,15 +38,11 @@
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label" for="role">Role</label>
-                            <select id="role" name="role" class="form-select {{ errors()->has('role') ? 'is-invalid' : '' }}">
-                                @foreach ($roles as $roleOption)
-                                    <option value="{{ $roleOption->name }}" @if (old('role') === $roleOption->name) selected @endif>{{ $roleOption->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('role') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
+                       <div class="mb-3">
+    <label class="form-label">Role</label>
+    <input type="text" class="form-control" value="petugas" readonly>
+    <input type="hidden" name="role" value="petugas">
+</div>
 
                         <button class="btn btn-brand w-100" type="submit">Tambah User</button>
                     </form>
