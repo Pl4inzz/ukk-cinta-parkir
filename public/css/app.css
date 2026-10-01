@@ -346,3 +346,153 @@ code.inline {
         display: none !important;
     }
 }
+
+/* =========================================================
+   EZPARK GLOBAL LAYOUT
+   Sidebar desktop dibuat fixed-size agar tidak berubah antar route.
+   ========================================================= */
+
+.ezpark-shell {
+    width: 100%;
+}
+
+.sidebar {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    flex: 0 0 260px !important;
+    height: 100vh;
+    z-index: 1050;
+}
+
+.sidebar > .offcanvas-body {
+    width: 260px;
+    min-width: 260px;
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        position: sticky !important;
+        top: 0;
+        align-self: flex-start;
+        overflow: hidden;
+    }
+
+    .sidebar > .offcanvas-body {
+        height: 100vh;
+        overflow-y: auto;
+    }
+}
+
+/* Theme toggle baru: tombol bulat dengan ikon matahari/bulan */
+.theme-toggle {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 50%;
+    background: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    transition: transform .15s ease, background-color .15s ease, color .15s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.06);
+    background: var(--brand-subtle);
+    color: var(--brand);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.theme-toggle svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.theme-toggle svg path:first-child {
+    fill: currentColor;
+    stroke: none;
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        width: 260px !important;
+        min-width: 260px !important;
+        max-width: calc(100vw - 48px) !important;
+        box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+    }
+
+    .sidebar.show {
+        transform: translateX(0) !important;
+    }
+}
+
+
+/* Theme toggle: versi stabil tanpa SVG */
+.theme-toggle {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    border: 1px solid var(--bs-border-color) !important;
+    border-radius: 50% !important;
+    background: var(--bs-tertiary-bg) !important;
+    color: var(--bs-body-color) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 36px !important;
+    line-height: 1 !important;
+    font-size: 18px !important;
+    font-family: "Segoe UI Symbol", "Noto Sans Symbols", sans-serif !important;
+    overflow: hidden !important;
+    transition: transform .15s ease, background-color .15s ease, color .15s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.06);
+    background: var(--brand-subtle) !important;
+    color: var(--brand) !important;
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.theme-toggle > [data-theme-icon] {
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 18px;
+}
+
+@media (max-width: 991.98px) {
+    .theme-toggle {
+        width: 36px !important;
+        height: 36px !important;
+        flex-basis: 36px !important;
+    }
+}

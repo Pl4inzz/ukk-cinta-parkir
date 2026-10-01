@@ -24,13 +24,26 @@
                 margin: 0;
                 overflow-x: hidden;
             }
+
+            .ezpark-shell {
+                min-height: 100vh;
+                align-items: stretch;
+            }
+
             .ezpark-content {
                 min-width: 0;
+                width: 100%;
             }
 
             @media (min-width: 992px) {
+                .ezpark-shell {
+                    height: 100vh;
+                }
+
                 .ezpark-content {
+                    height: 100vh;
                     max-height: 100vh;
+                    overflow-y: auto;
                 }
             }
         </style>
@@ -38,7 +51,7 @@
     <body class="bg-body-tertiary">
 
         <!-- Wrapper utama flexbox sejajar samping (Horizontal) -->
-        <div class="d-flex flex-column flex-lg-row min-vh-100 align-items-stretch">
+        <div class="ezpark-shell d-flex flex-column flex-lg-row min-vh-100">
 
             <!-- Include Sidebar/Navbar dari partials/navbar.sakuci.php -->
             @include('partials.navbar')
@@ -59,7 +72,37 @@
         
 
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('js/theme.js') }}"></script>
+
+    {{-- Theme toggle EZPark: tersimpan di localStorage dan berlaku di semua route --}}
+    <script>
+        (function () {
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+                localStorage.setItem('sakuci-theme', theme);
+
+                document.querySelectorAll('[data-theme-icon]').forEach(function (icon) {
+                    icon.textContent = theme === 'dark' ? '☀' : '☾';
+                });
+            }
+
+            function toggleTheme() {
+                var current = document.documentElement.getAttribute('data-bs-theme') || 'light';
+                applyTheme(current === 'dark' ? 'light' : 'dark');
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+                    button.addEventListener('click', toggleTheme);
+                });
+
+                var current = document.documentElement.getAttribute('data-bs-theme') || 'light';
+                document.querySelectorAll('[data-theme-icon]').forEach(function (icon) {
+                    icon.textContent = current === 'dark' ? '☀' : '☾';
+                });
+            });
+        })();
+    </script>
+
     @yield('scripts')
 
     </body>
