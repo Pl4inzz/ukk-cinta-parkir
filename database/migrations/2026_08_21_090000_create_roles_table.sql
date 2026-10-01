@@ -1,16 +1,16 @@
 -- create_roles_table
--- Daftar role yang bisa dipilih saat menambah user. Admin bisa menambah
--- role baru lewat halaman /admin/roles.
+-- Daftar role bawaan aplikasi.
 
 CREATE TABLE IF NOT EXISTS `roles` (
-    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name       VARCHAR(50) NOT NULL UNIQUE,
-    created_at DATETIME NULL,
-    updated_at DATETIME NULL
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name          VARCHAR(50) NOT NULL UNIQUE,
+    created_at    DATETIME NULL,
+    updated_at    DATETIME NULL,
+    can_register  TINYINT(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Satu-satunya role bawaan. Role lain (staff, user, dst) dibuat sendiri
--- oleh admin lewat /admin/roles -- middleware & route-nya otomatis dibuat.
+
+-- Role bawaan aplikasi
 INSERT INTO `roles`
 (`name`, `created_at`, `updated_at`, `can_register`)
 VALUES
