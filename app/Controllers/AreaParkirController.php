@@ -4,14 +4,18 @@ namespace App\Controllers;
 
 use Sakuci\Controller;
 use Sakuci\Http\Request;
+use App\Models\LogAktivitas;
+use App\Models\AreaParkir;
 
 class AreaParkirController extends Controller
 {
     public function index(Request $request)
     {
-        $areaList = \App\Models\AreaParkir::all();
-        // Ubah 'area.index' menjadi 'admin.area.index' dan sesuaikan nama variabel ke 'areaList'
-        return view('area.index', ['areaList' => $areaList]);
+        $areaList = AreaParkir::all();
+
+        return view('area.index', [
+            'areaList' => $areaList
+        ]);
     }
 
     public function create(Request $request)
@@ -21,43 +25,126 @@ class AreaParkirController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->only(['nama_area', 'kapasitas']);
-        $data['terisi'] = 0; // Set terisi ke 0 saat membuat area parkir baru
-        \App\Models\AreaParkir::create($data);
-        return redirect()->route('area.index')->with('success', 'Area parkir berhasil ditambahkan.');
+        $data = $request->only([
+            'nama_area',
+            'kapasitas'
+        ]);
+
+        $data['terisi'] = 0;
+
+        $areaParkir = AreaParkir::create($data);
+
+        LogAktivitas::catat(
+            'CREATE',
+            'Menambahkan area parkir ' .
+            $areaParkir->nama_area .
+            ' dengan kapasitas ' .
+            $areaParkir->kapasitas .
+            ' kendaraan.'
+        );
+
+        return redirect()
+            ->route('area.index')
+            ->with(
+                'success',
+                'Area parkir berhasil ditambahkan.'
+            );
     }
 
-public function edit(Request $request, $id)
-{
-    $area = \App\Models\AreaParkir::find($id);
-    if (!$area) {
-        return redirect()->route('area.index')->with('error', 'Area parkir tidak ditemukan.');
+    public function edit(Request $request, $id)
+    {
+        $area = AreaParkir::find($id);
+
+        if (!$area) {
+            return redirect()
+                ->route('area.index')
+                ->with(
+                    'error',
+                    'Area parkir tidak ditemukan.'
+                );
+        }
+
+        return view('area.edit', [
+            'area' => $area
+        ]);
     }
-    
-    // Ubah kunci dari 'areaParkir' menjadi 'area'
-    return view('area.edit', ['area' => $area]);
-}
 
     public function update(Request $request, $id)
     {
-        $areaParkir = \App\Models\AreaParkir::find($id);
+        $areaParkir = AreaParkir::find($id);
+
         if (!$areaParkir) {
-            return redirect()->route('area.index')->with('error', 'Area parkir tidak ditemukan.');
+            return redirect()
+                ->route('area.index')
+                ->with(
+                    'error',
+                    'Area parkir tidak ditemukan.'
+                );
         }
 
-        $data = $request->only(['nama_area', 'kapasitas']);
+        $namaAreaLama = $areaParkir->nama_area;
+        $kapasitasLama = $areaParkir->kapasitas;
+
+        $data = $request->only([
+            'nama_area',
+            'kapasitas'
+        ]);
+
         $areaParkir->update($data);
-        return redirect()->route('area.index')->with('success', 'Area parkir berhasil diperbarui.');
+
+        LogAktivitas::catat(
+            'UPDATE',
+            'Mengubah area parkir ' .
+            $namaAreaLama .
+            ' menjadi ' .
+            $areaParkir->nama_area .
+            ' dengan kapasitas ' .
+            $kapasitasLama .
+            ' menjadi ' .
+            $areaParkir->kapasitas .
+            ' kendaraan.'
+        );
+
+        return redirect()
+            ->route('area.index')
+            ->with(
+                'success',
+                'Area parkir berhasil diperbarui.'
+            );
     }
 
     public function destroy(Request $request, $id)
     {
-        $areaParkir = \App\Models\AreaParkir::find($id);
+        $areaParkir = AreaParkir::find($id);
+
         if (!$areaParkir) {
-            return redirect()->route('area.index')->with('error', 'Area parkir tidak ditemukan.');
+            return redirect()
+                ->route('area.index')
+                ->with(
+                    'error',
+                    'Area parkir tidak ditemukan.'
+                );
         }
 
+        $namaArea = $areaParkir->nama_area;
+        $kapasitas = $areaParkir->kapasitas;
+
         $areaParkir->delete();
-        return redirect()->route('area.index')->with('success', 'Area parkir berhasil dihapus.');
+
+        LogAktivitas::catat(
+            'DELETE',
+            'Menghapus area parkir ' .
+            $namaArea .
+            ' dengan kapasitas ' .
+            $kapasitas .
+            ' kendaraan.'
+        );
+
+        return redirect()
+            ->route('area.index')
+            ->with(
+                'success',
+                'Area parkir berhasil dihapus.'
+            );
     }
 }

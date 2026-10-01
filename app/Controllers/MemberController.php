@@ -6,6 +6,7 @@ use Sakuci\Controller;
 use Sakuci\Http\Request;
 use App\Models\Member;
 use App\Models\User;
+use App\Models\LogAktivitas;
 
 class MemberController extends Controller
 {
@@ -101,7 +102,22 @@ class MemberController extends Controller
         /*
          * Simpan member
          */
-        Member::create($data);
+        $member = Member::create($data);
+
+
+        /*
+         * Catat aktivitas
+         */
+        LogAktivitas::catat(
+            'CREATE',
+            'Menambahkan member ' .
+            $member->nama .
+            ' dengan kode member ' .
+            $member->kode_member .
+            ' dan plat nomor ' .
+            $member->plat_nomor .
+            '.'
+        );
 
 
         return redirect()
@@ -127,6 +143,15 @@ class MemberController extends Controller
     public function update(Request $request, $id)
     {
         $member = Member::findOrFail($id);
+
+
+        /*
+         * Simpan data lama
+         * untuk kebutuhan log aktivitas
+         */
+        $namaLama = $member->nama;
+        $kodeLama = $member->kode_member;
+        $platLama = $member->plat_nomor;
 
 
         $data = $request->validate([
@@ -202,14 +227,32 @@ class MemberController extends Controller
         /*
          * Jangan mengubah id_user
          * saat edit.
-         *
-         * Pendaftar tetap user
-         * yang tercatat sebelumnya.
          */
         unset($data['id_user']);
 
 
         $member->update($data);
+
+
+        /*
+         * Catat aktivitas
+         */
+        LogAktivitas::catat(
+            'UPDATE',
+            'Mengubah member ' .
+            $namaLama .
+            ' (' .
+            $kodeLama .
+            ', ' .
+            $platLama .
+            ') menjadi ' .
+            $member->nama .
+            ' (' .
+            $member->kode_member .
+            ', ' .
+            $member->plat_nomor .
+            ').'
+        );
 
 
         return redirect()
@@ -225,7 +268,31 @@ class MemberController extends Controller
     {
         $member = Member::findOrFail($id);
 
+
+        /*
+         * Simpan data sebelum dihapus
+         */
+        $namaMember = $member->nama;
+        $kodeMember = $member->kode_member;
+        $platNomor = $member->plat_nomor;
+
+
         $member->delete();
+
+
+        /*
+         * Catat aktivitas
+         */
+        LogAktivitas::catat(
+            'DELETE',
+            'Menghapus member ' .
+            $namaMember .
+            ' dengan kode member ' .
+            $kodeMember .
+            ' dan plat nomor ' .
+            $platNomor .
+            '.'
+        );
 
 
         return redirect()

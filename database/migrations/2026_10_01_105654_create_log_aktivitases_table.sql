@@ -1,8 +1,10 @@
 -- create_log_aktivitases_table
 
-CREATE TABLE IF NOT EXISTS `log_aktivitases` (
-    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nama       VARCHAR(255) NOT NULL,
-    created_at DATETIME NULL,
-    updated_at DATETIME NULL
+CREATE TABLE IF NOT EXISTS `log_aktivitas` (
+    id_log         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id_user        INT UNSIGNED NULL,
+    aktivitas      VARCHAR(100) NOT NULL,
+    deskripsi      VARCHAR(255) NULL,
+    created_at     DATETIME NULL,
+    updated_at     DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

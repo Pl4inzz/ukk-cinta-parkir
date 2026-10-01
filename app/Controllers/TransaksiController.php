@@ -9,6 +9,7 @@ use App\Models\Tarif;
 use App\Models\AreaParkir;
 use App\Models\Member;
 use App\Models\User;
+use App\Models\LogAktivitas;
 
 class TransaksiController extends Controller
 {
@@ -253,6 +254,17 @@ public function storeMasuk(Request $request)
         'terisi' => $area->terisi + 1
     ]);
 
+    LogAktivitas::catat(
+    'PARKIR_MASUK',
+    'Kendaraan ' .
+    $platNomor .
+    ' masuk ke area ' .
+    $area->nama_area .
+    ' (' .
+    $jenisKendaraan .
+    ').'
+);
+
     // =========================
     // CETAK TIKET
     // =========================
@@ -338,6 +350,24 @@ public function storeMasuk(Request $request)
                 'terisi' => $area->terisi - 1
             ]);
         }
+
+        LogAktivitas::catat(
+        'PARKIR_KELUAR',
+        'Kendaraan ' .
+        $transaksi->plat_nomor .
+        ' keluar dari area ' .
+        ($area ? $area->nama_area : '-') .
+        ' setelah parkir ' .
+        $durasiJam .
+        ' jam dengan biaya Rp ' .
+        number_format(
+            $biayaTotal,
+            0,
+            ',',
+            '.'
+        ) .
+        '.'
+    );
 
         return redirect()
             ->route('petugas.transaksi.cetakStruk', [

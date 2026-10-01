@@ -112,7 +112,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link rounded-3 {{ is_route('admin.log.*') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
+                        <a href="{{ route('logAktivitas.index') }}" class="nav-link rounded-3 {{ is_route('logAktivitas.index') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
                             Log Aktivitas
                         </a>
                     </li>

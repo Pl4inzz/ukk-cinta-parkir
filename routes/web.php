@@ -9,6 +9,8 @@ use App\Controllers\Core\UserController;
 use App\Controllers\AreaParkirController;
 use App\Controllers\TransaksiController;
 use App\Controllers\MemberController;
+use App\Controllers\TarifController;
+use App\Controllers\LogAktivitasController;
 use Sakuci\Route;
 
 /*
@@ -63,12 +65,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/database/export', [DatabaseController::class, 'export'])->name('admin.database.export');
 
     //Tarif Routes
-    Route::get('/tarif', [\App\Controllers\TarifController::class, 'index'])->name('admin.tarif.index');
-    Route::get('/tarif/create', [\App\Controllers\TarifController::class, 'create'])->name('admin.tarif.create');
-    Route::post('/tarif', [\App\Controllers\TarifController::class, 'store'])->name('admin.tarif.store');
-    Route::get('/tarif/{id}/edit', [\App\Controllers\TarifController::class, 'edit'])->name('admin.tarif.edit');
-    Route::put('/tarif/{id}', [\App\Controllers\TarifController::class, 'update'])->name('admin.tarif.update');
-    Route::delete('/tarif/{id}', [\App\Controllers\TarifController::class, 'destroy'])->name('admin.tarif.destroy');
+    Route::get('/tarif', [TarifController::class, 'index'])->name('admin.tarif.index');
+    Route::get('/tarif/create', [TarifController::class, 'create'])->name('admin.tarif.create');
+    Route::post('/tarif', [TarifController::class, 'store'])->name('admin.tarif.store');
+    Route::get('/tarif/{id}/edit', [TarifController::class, 'edit'])->name('admin.tarif.edit');
+    Route::put('/tarif/{id}', [TarifController::class, 'update'])->name('admin.tarif.update');
+    Route::delete('/tarif/{id}', [TarifController::class, 'destroy'])->name('admin.tarif.destroy');
 
     //Area Routes
     Route::get('/area', [AreaParkirController::class, 'index'])->name('area.index');
@@ -84,6 +86,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/members/{id}/edit', [MemberController::class, 'edit'])->name('members.edit');
     Route::put('/members/{id}', [MemberController::class, 'update'])->name('members.update');
     Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
+
+    // Log Aktivitas Routes
+    Route::get('/log-aktivitas',[LogAktivitasController::class, 'index'])->name('logAktivitas.index');
 });
 
 /*
