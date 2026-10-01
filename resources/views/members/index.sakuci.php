@@ -1,18 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Member')
+@section('title', 'Kelola Member')
 
 @section('content')
 
 <div class="d-flex align-items-center justify-content-between mb-4">
+
     <div>
         <span class="badge rounded-pill badge-brand px-3 py-2 mb-2">
-            Member Admin
+            Area Admin
         </span>
 
-        <h1 class="h4 mb-0">
-            Manage Member
+        <h1 class="h4 mb-1">
+            Kelola Member
         </h1>
+
+        <p class="text-muted mb-0">
+            Kelola data member dan status keanggotaan parkir EZPark.
+        </p>
     </div>
 
     <a
@@ -21,19 +26,37 @@
     >
         &larr; Kembali
     </a>
-</div>ww
+
+</div>
+
+
 <div class="row g-4">
 
-    <!-- Form Tambah Member -->
+    {{-- FORM TAMBAH MEMBER --}}
     <div class="col-md-5">
 
         <div class="card border-0 shadow-sm">
 
             <div class="card-body p-4">
 
-                <h2 class="h6 mb-3">
-                    Tambah Member
-                </h2>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+
+                    <div>
+                        <h2 class="h6 mb-1">
+                            Tambah Member
+                        </h2>
+
+                        <small class="text-muted">
+                            Daftarkan member baru
+                        </small>
+                    </div>
+
+                    <span class="badge bg-warning-subtle text-warning">
+                        Member
+                    </span>
+
+                </div>
+
 
                 <form
                     method="POST"
@@ -43,7 +66,7 @@
                     @csrf
 
 
-                    <!-- Kode Member -->
+                    {{-- KODE MEMBER --}}
                     <div class="mb-3">
 
                         <label
@@ -62,6 +85,10 @@
                             class="form-control {{ errors()->has('kode_member') ? 'is-invalid' : '' }}"
                         >
 
+                        <small class="text-muted">
+                            Gunakan kode unik untuk setiap member.
+                        </small>
+
                         @error('kode_member')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -71,7 +98,7 @@
                     </div>
 
 
-                    <!-- Nama -->
+                    {{-- NAMA --}}
                     <div class="mb-3">
 
                         <label
@@ -99,7 +126,7 @@
                     </div>
 
 
-                    <!-- Pendaftar -->
+                    {{-- PENDAFTAR --}}
                     <div class="mb-3">
 
                         <label
@@ -112,7 +139,7 @@
                         <input
                             type="text"
                             id="id_user"
-                            value="{{ $users ? $users->username  : '-' }}"
+                            value="{{ $users ? $users->username : '-' }}"
                             class="form-control"
                             readonly
                         >
@@ -123,10 +150,14 @@
                             value="{{ $users ? $users->id : '' }}"
                         >
 
+                        <small class="text-muted">
+                            Akun yang sedang digunakan untuk mendaftarkan member.
+                        </small>
+
                     </div>
 
 
-                    <!-- Plat Nomor -->
+                    {{-- PLAT NOMOR --}}
                     <div class="mb-3">
 
                         <label
@@ -155,7 +186,7 @@
                     </div>
 
 
-                    <!-- Jenis Kendaraan -->
+                    {{-- JENIS KENDARAAN --}}
                     <div class="mb-3">
 
                         <label
@@ -207,7 +238,7 @@
                     </div>
 
 
-                    <!-- No HP -->
+                    {{-- NO HP --}}
                     <div class="mb-3">
 
                         <label
@@ -235,14 +266,14 @@
                     </div>
 
 
-                    <!-- Status -->
+                    {{-- STATUS --}}
                     <div class="mb-3">
 
                         <label
                             class="form-label"
                             for="status_aktif"
                         >
-                            Status
+                            Status Member
                         </label>
 
                         <select
@@ -276,8 +307,8 @@
                     </div>
 
 
-                    <!-- Tanggal Kadaluarsa -->
-                    <div class="mb-3">
+                    {{-- TANGGAL KADALUARSA --}}
+                    <div class="mb-4">
 
                         <label
                             class="form-label"
@@ -294,6 +325,10 @@
                             class="form-control {{ errors()->has('tanggal_kadaluarsa') ? 'is-invalid' : '' }}"
                         >
 
+                        <small class="text-muted">
+                            Tanggal berakhirnya masa keanggotaan.
+                        </small>
+
                         @error('tanggal_kadaluarsa')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -303,11 +338,12 @@
                     </div>
 
 
+                    {{-- BUTTON --}}
                     <button
                         class="btn btn-brand w-100"
                         type="submit"
                     >
-                        Tambah Member
+                        + Tambah Member
                     </button>
 
                 </form>
@@ -316,36 +352,81 @@
 
         </div>
 
+
+        {{-- INFO MEMBER --}}
+        <div class="card border-0 shadow-sm mt-4">
+
+            <div class="card-body p-4">
+
+                <h2 class="h6 mb-3">
+                    Keuntungan Member
+                </h2>
+
+                <div class="p-3 rounded-3 bg-body-tertiary">
+
+                    <strong class="d-block mb-1">
+                        Diskon Parkir 20%
+                    </strong>
+
+                    <small class="text-muted">
+                        Member mendapatkan potongan 20% dari biaya normal
+                        saat melakukan transaksi parkir.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
 
-    <!-- Tabel Daftar Member -->
+    {{-- DAFTAR MEMBER --}}
     <div class="col-md-7">
 
         <div class="card border-0 shadow-sm">
 
             <div class="card-body p-4">
 
-                <h2 class="h6 mb-3">
-                    Daftar Member
-                </h2>
+                <div class="d-flex align-items-center justify-content-between mb-3">
 
-                <table class="table table-sm align-middle mb-0">
+                    <div>
+                        <h2 class="h6 mb-1">
+                            Daftar Member
+                        </h2>
 
-                    <thead>
+                        <small class="text-muted">
+                            Member yang terdaftar pada sistem
+                        </small>
+                    </div>
 
-                        <tr>
-                            <th>#</th>
-                            <th>Member</th>
-                            <th>Pendaftar</th>
-                            <th>Kendaraan</th>
-                            <th>Status</th>
-                            <th class="text-end">Aksi</th>
-                        </tr>
+                    <span class="badge rounded-pill badge-brand">
+                        {{ isset($members) ? count($members) : 0 }} Member
+                    </span>
 
-                    </thead>
+                </div>
 
-                    <tbody>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead>
+
+                            <tr>
+                                <th width="45">#</th>
+                                <th>Member</th>
+                                <th>Pendaftar</th>
+                                <th>Kendaraan</th>
+                                <th>Status</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
 
                         @if (isset($members) && count($members) > 0)
 
@@ -357,10 +438,13 @@
 
                                 <tr>
 
-                                    <td>
+                                    {{-- NOMOR --}}
+                                    <td class="text-muted">
                                         {{ $no++ }}
                                     </td>
 
+
+                                    {{-- MEMBER --}}
                                     <td>
 
                                         <span class="fw-medium d-block">
@@ -373,16 +457,26 @@
 
                                     </td>
 
+
+                                    {{-- PENDAFTAR --}}
                                     <td>
+
                                         @if ($item->user)
+
                                             {{ $item->user->username }}
+
                                         @else
+
                                             <span class="text-secondary">
                                                 -
                                             </span>
+
                                         @endif
+
                                     </td>
 
+
+                                    {{-- KENDARAAN --}}
                                     <td>
 
                                         <span class="fw-medium d-block">
@@ -395,6 +489,8 @@
 
                                     </td>
 
+
+                                    {{-- STATUS --}}
                                     <td>
 
                                         @if ($item->status_aktif === 'aktif')
@@ -413,27 +509,23 @@
 
                                     </td>
 
+
+                                    {{-- AKSI --}}
                                     <td class="text-end">
 
                                         <div class="d-inline-flex gap-2">
 
                                             <a
-                                                href="{{ route(
-                                                    'members.edit',
-                                                    ['id' => $item->id_member]
-                                                ) }}"
+                                                href="{{ route('members.edit', ['id' => $item->id_member]) }}"
                                                 class="btn btn-sm btn-outline-brand"
                                             >
                                                 Edit
                                             </a>
 
+
                                             <form
                                                 method="POST"
-                                                action="{{ route(
-                                                    'members.destroy',
-                                                    ['id' => $item->id_member]
-                                                ) }}"
-                                                class="d-inline"
+                                                action="{{ route('members.destroy', ['id' => $item->id_member]) }}"
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus member ini?')"
                                             >
 
@@ -463,7 +555,7 @@
 
                                 <td
                                     colspan="6"
-                                    class="text-secondary text-center py-3"
+                                    class="text-center text-secondary py-4"
                                 >
                                     Belum ada data member.
                                 </td>
@@ -472,9 +564,11 @@
 
                         @endif
 
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
+
+                </div>
 
             </div>
 

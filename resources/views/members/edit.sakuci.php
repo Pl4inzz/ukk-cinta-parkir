@@ -8,48 +8,68 @@
 
     <div>
         <span class="badge rounded-pill badge-brand px-3 py-2 mb-2">
-            Member Admin
+            Area Admin
         </span>
 
-        <h1 class="h4 mb-0">
+        <h1 class="h4 mb-1">
             Edit Member
         </h1>
-    </div>
 
-    <a
-        href="{{ route('members.index') }}"
-        class="btn btn-sm btn-outline-secondary"
-    >
-        &larr; Kembali
-    </a>
+        <p class="text-muted mb-0">
+            Perbarui data dan status keanggotaan member EZPark.
+        </p>
+    </div>
 
 </div>
 
+
 <div class="row justify-content-center">
 
-    <div class="col-md-6">
+    <div class="col-md-7 col-lg-6">
 
         <div class="card border-0 shadow-sm">
 
             <div class="card-body p-4">
 
-                <h2 class="h6 mb-3">
-                    Edit Data Member
-                </h2>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+
+                    <div>
+                        <h2 class="h6 mb-1">
+                            Form Edit Member
+                        </h2>
+
+                        <small class="text-muted">
+                            Member #{{ $member->id_member }}
+                        </small>
+                    </div>
+
+                    @if ($member->status_aktif === 'aktif')
+
+                        <span class="badge bg-success-subtle text-success">
+                            Aktif
+                        </span>
+
+                    @else
+
+                        <span class="badge bg-danger-subtle text-danger">
+                            Nonaktif
+                        </span>
+
+                    @endif
+
+                </div>
+
 
                 <form
                     method="POST"
-                    action="{{ route(
-                        'members.update',
-                        ['id' => $member->id_member]
-                    ) }}"
+                    action="{{ route('members.update', ['id' => $member->id_member]) }}"
                 >
 
                     @csrf
                     @method('PUT')
 
 
-                    <!-- Kode Member -->
+                    {{-- KODE MEMBER --}}
                     <div class="mb-3">
 
                         <label
@@ -63,12 +83,14 @@
                             type="text"
                             id="kode_member"
                             name="kode_member"
-                            value="{{ old(
-                                'kode_member',
-                                $member->kode_member
-                            ) }}"
+                            value="{{ old('kode_member', $member->kode_member) }}"
+                            placeholder="Contoh: MBR-001"
                             class="form-control {{ errors()->has('kode_member') ? 'is-invalid' : '' }}"
                         >
+
+                        <small class="text-muted">
+                            Kode member harus unik.
+                        </small>
 
                         @error('kode_member')
                             <div class="invalid-feedback">
@@ -79,7 +101,7 @@
                     </div>
 
 
-                    <!-- Nama -->
+                    {{-- NAMA --}}
                     <div class="mb-3">
 
                         <label
@@ -93,10 +115,8 @@
                             type="text"
                             id="nama"
                             name="nama"
-                            value="{{ old(
-                                'nama',
-                                $member->nama
-                            ) }}"
+                            value="{{ old('nama', $member->nama) }}"
+                            placeholder="Contoh: Mikael Keyndradito"
                             class="form-control {{ errors()->has('nama') ? 'is-invalid' : '' }}"
                         >
 
@@ -109,34 +129,38 @@
                     </div>
 
 
-                    <!-- Pendaftar -->
-                        <div class="mb-3">
+                    {{-- PENDAFTAR --}}
+                    <div class="mb-3">
 
-                            <label
-                                class="form-label"
-                                for="id_user"
-                            >
-                                Pendaftar
-                            </label>
+                        <label
+                            class="form-label"
+                            for="id_user"
+                        >
+                            Pendaftar
+                        </label>
 
-                            <input
-                                type="text"
-                                id="id_user"
-                                value="{{ $member->user ? $member->user->nama_lengkap : '-' }}"
-                                class="form-control"
-                                readonly
-                            >
+                        <input
+                            type="text"
+                            id="id_user"
+                            value="{{ $member->user ? $member->user->nama_lengkap : '-' }}"
+                            class="form-control"
+                            readonly
+                        >
 
-                            <input
-                                type="hidden"
-                                name="id_user"
-                                value="{{ $member->id_user }}"
-                            >
+                        <input
+                            type="hidden"
+                            name="id_user"
+                            value="{{ $member->id_user }}"
+                        >
 
-                        </div>
+                        <small class="text-muted">
+                            Akun pendaftar tidak diubah melalui form ini.
+                        </small>
+
+                    </div>
 
 
-                    <!-- Plat Nomor -->
+                    {{-- PLAT NOMOR --}}
                     <div class="mb-3">
 
                         <label
@@ -150,10 +174,8 @@
                             type="text"
                             id="plat_nomor"
                             name="plat_nomor"
-                            value="{{ old(
-                                'plat_nomor',
-                                $member->plat_nomor
-                            ) }}"
+                            value="{{ old('plat_nomor', $member->plat_nomor) }}"
+                            placeholder="Contoh: B 1234 ABC"
                             maxlength="15"
                             class="form-control {{ errors()->has('plat_nomor') ? 'is-invalid' : '' }}"
                         >
@@ -167,7 +189,7 @@
                     </div>
 
 
-                    <!-- Jenis Kendaraan -->
+                    {{-- JENIS KENDARAAN --}}
                     <div class="mb-3">
 
                         <label
@@ -189,30 +211,21 @@
 
                             <option
                                 value="motor"
-                                {{ old(
-                                    'jenis_kendaraan',
-                                    $member->jenis_kendaraan
-                                ) === 'motor' ? 'selected' : '' }}
+                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'motor' ? 'selected' : '' }}
                             >
                                 Motor
                             </option>
 
                             <option
                                 value="mobil"
-                                {{ old(
-                                    'jenis_kendaraan',
-                                    $member->jenis_kendaraan
-                                ) === 'mobil' ? 'selected' : '' }}
+                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'mobil' ? 'selected' : '' }}
                             >
                                 Mobil
                             </option>
 
                             <option
                                 value="lainnya"
-                                {{ old(
-                                    'jenis_kendaraan',
-                                    $member->jenis_kendaraan
-                                ) === 'lainnya' ? 'selected' : '' }}
+                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'lainnya' ? 'selected' : '' }}
                             >
                                 Lainnya
                             </option>
@@ -228,7 +241,7 @@
                     </div>
 
 
-                    <!-- No HP -->
+                    {{-- NO HP --}}
                     <div class="mb-3">
 
                         <label
@@ -242,10 +255,8 @@
                             type="text"
                             id="no_hp"
                             name="no_hp"
-                            value="{{ old(
-                                'no_hp',
-                                $member->no_hp
-                            ) }}"
+                            value="{{ old('no_hp', $member->no_hp) }}"
+                            placeholder="Contoh: 081234567890"
                             class="form-control {{ errors()->has('no_hp') ? 'is-invalid' : '' }}"
                         >
 
@@ -258,14 +269,14 @@
                     </div>
 
 
-                    <!-- Status -->
+                    {{-- STATUS --}}
                     <div class="mb-3">
 
                         <label
                             class="form-label"
                             for="status_aktif"
                         >
-                            Status
+                            Status Member
                         </label>
 
                         <select
@@ -276,20 +287,14 @@
 
                             <option
                                 value="aktif"
-                                {{ old(
-                                    'status_aktif',
-                                    $member->status_aktif
-                                ) === 'aktif' ? 'selected' : '' }}
+                                {{ old('status_aktif', $member->status_aktif) === 'aktif' ? 'selected' : '' }}
                             >
                                 Aktif
                             </option>
 
                             <option
                                 value="nonaktif"
-                                {{ old(
-                                    'status_aktif',
-                                    $member->status_aktif
-                                ) === 'nonaktif' ? 'selected' : '' }}
+                                {{ old('status_aktif', $member->status_aktif) === 'nonaktif' ? 'selected' : '' }}
                             >
                                 Nonaktif
                             </option>
@@ -305,8 +310,8 @@
                     </div>
 
 
-                    <!-- Tanggal Kadaluarsa -->
-                    <div class="mb-3">
+                    {{-- TANGGAL KADALUARSA --}}
+                    <div class="mb-4">
 
                         <label
                             class="form-label"
@@ -319,12 +324,13 @@
                             type="date"
                             id="tanggal_kadaluarsa"
                             name="tanggal_kadaluarsa"
-                            value="{{ old(
-                                'tanggal_kadaluarsa',
-                                $member->tanggal_kadaluarsa
-                            ) }}"
+                            value="{{ old('tanggal_kadaluarsa', $member->tanggal_kadaluarsa) }}"
                             class="form-control {{ errors()->has('tanggal_kadaluarsa') ? 'is-invalid' : '' }}"
                         >
+
+                        <small class="text-muted">
+                            Tanggal berakhirnya masa keanggotaan.
+                        </small>
 
                         @error('tanggal_kadaluarsa')
                             <div class="invalid-feedback">
@@ -335,6 +341,7 @@
                     </div>
 
 
+                    {{-- BUTTON --}}
                     <div class="d-flex gap-2">
 
                         <a
@@ -354,6 +361,33 @@
                     </div>
 
                 </form>
+
+            </div>
+
+        </div>
+
+
+        {{-- INFO --}}
+        <div class="card border-0 shadow-sm mt-4">
+
+            <div class="card-body p-4">
+
+                <h2 class="h6 mb-3">
+                    Informasi Member
+                </h2>
+
+                <div class="p-3 rounded-3 bg-body-tertiary">
+
+                    <strong class="d-block mb-1">
+                        Diskon Member 20%
+                    </strong>
+
+                    <small class="text-muted">
+                        Member mendapatkan potongan 20% dari biaya normal
+                        pada transaksi parkir.
+                    </small>
+
+                </div>
 
             </div>
 

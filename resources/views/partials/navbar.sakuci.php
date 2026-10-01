@@ -132,11 +132,25 @@
 
                 <!-- Menu Khusus Owner -->
                 @elseif ($currentUser->role === 'owner')
+
                     <li class="nav-item">
-                        <a href="{{ route('owner.rekap') }}" class="nav-link rounded-3 {{ is_route('owner.rekap') ? 'btn-brand text-white fw-semibold' : 'text-body' }}">
+                        <a
+                            href="{{ route('owner.dashboard') }}"
+                            class="nav-link rounded-3 {{ is_route('owner.dashboard') ? 'btn-brand text-white fw-semibold' : 'text-body' }}"
+                        >
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            href="{{ route('owner.rekap') }}"
+                            class="nav-link rounded-3 {{ is_route('owner.rekap') ? 'btn-brand text-white fw-semibold' : 'text-body' }}"
+                        >
                             Rekap Laporan
                         </a>
                     </li>
+
                 @endif
 
             @else

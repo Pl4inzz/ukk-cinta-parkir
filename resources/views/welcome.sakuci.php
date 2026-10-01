@@ -1,173 +1,446 @@
 @extends('layouts.app')
 
-@section('title', 'Sistem Manajemen Parkir Sakuci')
+@section('title', 'EZPark - Sistem Manajemen Parkir')
 
 @section('content')
 
-    {{-- Hero / Quick Status Banner --}}
-        <div class="row align-items-center g-4">
-            <div class="col-lg-7">
-                <span class="badge rounded-pill badge-brand px-3 py-2 mb-2">Sakuci Parking System v1.0</span>
-                <h1 class="display-6 fw-bold mb-2">
-                    Sistem Manajemen <span class="text-brand">Parkir Terpadu</span>
-                </h1>
-                <p class="text-secondary mb-4">
-                    Kelola transaksi masuk-keluar kendaraan, pantau ketersediaan slot secara real-time, dan cek status keanggotaan member dengan cepat.
-                </p>
+{{-- HERO --}}
+<div class="row align-items-center g-4 mb-5">
 
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="/transaksi/masuk" class="btn btn-brand btn-lg px-4 fs-6 fw-semibold">
-                        🚗 Parkir Masuk
-                    </a>
-                    <a href="/transaksi/keluar" class="btn btn-outline-brand btn-lg px-4 fs-6 fw-semibold">
-                        💳 Parkir Keluar / Bayar
-                    </a>
-                </div>
-            </div>
+    <div class="col-lg-7">
 
-            {{-- Ringkasan Slot Parkir Real-time --}}
-            <div class="col-lg-5">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <h2 class="h6 fw-bold mb-3 d-flex justify-content-between align-items-center">
-                            <span>Status Slot Parkir Hari Ini</span>
-                            <span class="badge bg-success-subtle text-success small fw-normal">Live</span>
+        <span class="badge rounded-pill badge-brand px-3 py-2 mb-3">
+            EZPark Parking System
+        </span>
+
+        <h1 class="display-5 fw-bold mb-3">
+            Sistem Manajemen
+            <span class="text-brand">
+                Parkir Terintegrasi
+            </span>
+        </h1>
+
+        <p class="text-secondary fs-5 mb-4">
+            EZPark membantu pengelolaan kendaraan masuk dan keluar,
+            membership, tarif parkir, area parkir, serta laporan
+            transaksi dalam satu sistem.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <a
+                href="{{ route('login') }}"
+                class="btn btn-brand btn-lg px-4 fw-semibold"
+            >
+                Login ke EZPark
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-5">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body p-4">
+
+                <div class="d-flex align-items-center gap-3 mb-4">
+
+                    <div
+                        class="rounded-3 bg-success-subtle d-flex align-items-center justify-content-center"
+                        style="width: 56px; height: 56px;"
+                    >
+                        <span class="fs-3">
+                            🚗
+                        </span>
+                    </div>
+
+                    <div>
+
+                        <h2 class="h5 mb-1">
+                            EZPark
                         </h2>
 
-                        <div class="row g-3 text-center">
-                            <div class="col-6">
-                                <div class="p-3 border rounded-3 bg-body-tertiary">
-                                    <div class="text-secondary small fw-medium mb-1">Slot Motor</div>
-                                    <div class="fs-3 fw-bold text-brand">42 <span class="fs-6 text-muted fw-normal">/ 100</span></div>
-                                    <div class="progress mt-2" style="height: 6px;">
-                                        <div class="progress-bar bg-brand" style="width: 58%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-3 border rounded-3 bg-body-tertiary">
-                                    <div class="text-secondary small fw-medium mb-1">Slot Mobil</div>
-                                    <div class="fs-3 fw-bold text-brand">15 <span class="fs-6 text-muted fw-normal">/ 50</span></div>
-                                    <div class="progress mt-2" style="height: 6px;">
-                                        <div class="progress-bar bg-brand" style="width: 70%"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <small class="text-muted">
+                            Parking Management System
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="p-3 rounded-3 bg-body-tertiary mb-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <span class="text-muted">
+                            Transaksi
+                        </span>
+
+                        <span class="badge bg-success-subtle text-success">
+                            Terintegrasi
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="p-3 rounded-3 bg-body-tertiary mb-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <span class="text-muted">
+                            Membership
+                        </span>
+
+                        <span class="badge bg-warning-subtle text-warning">
+                            Diskon 20%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="p-3 rounded-3 bg-body-tertiary">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <span class="text-muted">
+                            Laporan
+                        </span>
+
+                        <span class="badge bg-info-subtle text-info">
+                            Tersedia
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{{-- FITUR --}}
+<section class="mb-5">
+
+    <div class="text-center mb-4">
+
+        <span class="badge rounded-pill badge-brand px-3 py-2 mb-2">
+            Fitur Sistem
+        </span>
+
+        <h2 class="h4 fw-bold mb-2">
+            Semua kebutuhan parkir dalam satu sistem
+        </h2>
+
+        <p class="text-muted mb-0">
+            EZPark menyediakan fitur untuk mendukung operasional
+            dan pengelolaan parkir.
+        </p>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        {{-- TRANSAKSI --}}
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <div
+                        class="rounded-3 bg-success-subtle d-flex align-items-center justify-content-center mb-3"
+                        style="width: 48px; height: 48px;"
+                    >
+                        🚗
+                    </div>
+
+                    <h3 class="h6 fw-bold mb-2">
+                        Transaksi Parkir
+                    </h3>
+
+                    <p class="text-muted small mb-0">
+                        Catat kendaraan masuk, proses kendaraan keluar,
+                        hitung biaya, dan cetak tiket maupun struk.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- MEMBER --}}
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <div
+                        class="rounded-3 bg-warning-subtle d-flex align-items-center justify-content-center mb-3"
+                        style="width: 48px; height: 48px;"
+                    >
+                        👥
+                    </div>
+
+                    <h3 class="h6 fw-bold mb-2">
+                        Membership
+                    </h3>
+
+                    <p class="text-muted small mb-0">
+                        Kelola data member dan kendaraan yang terdaftar
+                        serta berikan diskon 20% pada transaksi member.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- AREA --}}
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <div
+                        class="rounded-3 bg-info-subtle d-flex align-items-center justify-content-center mb-3"
+                        style="width: 48px; height: 48px;"
+                    >
+                        🅿️
+                    </div>
+
+                    <h3 class="h6 fw-bold mb-2">
+                        Area Parkir
+                    </h3>
+
+                    <p class="text-muted small mb-0">
+                        Kelola area parkir beserta kapasitas dan
+                        jumlah kendaraan yang sedang berada di dalamnya.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- LAPORAN --}}
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <div
+                        class="rounded-3 bg-secondary-subtle d-flex align-items-center justify-content-center mb-3"
+                        style="width: 48px; height: 48px;"
+                    >
+                        📊
+                    </div>
+
+                    <h3 class="h6 fw-bold mb-2">
+                        Rekap Laporan
+                    </h3>
+
+                    <p class="text-muted small mb-0">
+                        Lihat transaksi yang telah selesai berdasarkan
+                        periode tertentu dan cetak laporan.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{{-- ALUR SISTEM --}}
+<section class="mb-5">
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4 p-lg-5">
+
+            <div class="text-center mb-4">
+
+                <span class="badge rounded-pill badge-brand px-3 py-2 mb-2">
+                    Alur Parkir
+                </span>
+
+                <h2 class="h4 fw-bold mb-2">
+                    Proses parkir yang sederhana
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Alur utama EZPark dari kendaraan masuk
+                    sampai transaksi selesai.
+                </p>
+
+            </div>
+
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <div class="text-center">
+
+                        <div
+                            class="rounded-circle bg-success-subtle d-inline-flex align-items-center justify-content-center mb-3"
+                            style="width: 56px; height: 56px;"
+                        >
+                            <strong class="text-success">
+                                1
+                            </strong>
                         </div>
 
+                        <h3 class="h6 fw-bold">
+                            Kendaraan Masuk
+                        </h3>
+
+                        <p class="text-muted small mb-0">
+                            Petugas mencatat kendaraan,
+                            member, dan area parkir.
+                        </p>
+
                     </div>
+
                 </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-center">
+
+                        <div
+                            class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center mb-3"
+                            style="width: 56px; height: 56px;"
+                        >
+                            <strong class="text-warning">
+                                2
+                            </strong>
+                        </div>
+
+                        <h3 class="h6 fw-bold">
+                            Kendaraan Parkir
+                        </h3>
+
+                        <p class="text-muted small mb-0">
+                            Transaksi tersimpan dan kendaraan
+                            tercatat sebagai masih parkir.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-center">
+
+                        <div
+                            class="rounded-circle bg-info-subtle d-inline-flex align-items-center justify-content-center mb-3"
+                            style="width: 56px; height: 56px;"
+                        >
+                            <strong class="text-info">
+                                3
+                            </strong>
+                        </div>
+
+                        <h3 class="h6 fw-bold">
+                            Kendaraan Keluar
+                        </h3>
+
+                        <p class="text-muted small mb-0">
+                            Biaya dihitung, diskon member diterapkan,
+                            kemudian struk dapat dicetak.
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
-    {{-- Akses Cepat Modul Utama --}}
-    <section class="mb-5">
-        <h2 class="h5 fw-bold mb-3">Akses Modul Utama</h2>
+    </div>
 
-        <div class="row row-cols-1 row-cols-md-3 g-3">
-            {{-- Modul Transaksi --}}
-            <div class="col">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="step-number mb-3">1</div>
-                        <h3 class="h6 fw-bold mb-2">Karcis & Transaksi</h3>
-                        <p class="text-secondary small mb-3">
-                            Cetak karcis masuk, scan barcode karcis keluar, dan hitung tarif otomatis berdasarkan durasi parkir.
-                        </p>
-                        <a href="/transaksi" class="text-brand fw-semibold small text-decoration-none">Buka Transaksi &rarr;</a>
-                    </div>
+</section>
+
+
+{{-- TENTANG EZPARK --}}
+<section class="mb-4">
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4 p-lg-5">
+
+            <div class="row align-items-center g-4">
+
+                <div class="col-lg-8">
+
+                    <span class="badge rounded-pill badge-brand px-3 py-2 mb-3">
+                        Tentang EZPark
+                    </span>
+
+                    <h2 class="h4 fw-bold mb-2">
+                        Sistem Informasi Manajemen Parkir
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        EZPark dirancang untuk membantu pengelolaan
+                        operasional parkir secara terstruktur, mulai dari
+                        data master, transaksi kendaraan, membership,
+                        hingga rekap laporan.
+                    </p>
+
                 </div>
+
+
+                <div class="col-lg-4 text-lg-end">
+
+                    <a
+                        href="{{ route('login') }}"
+                        class="btn btn-brand px-4"
+                    >
+                        Masuk ke Sistem
+                    </a>
+
+                </div>
+
             </div>
 
-            {{-- Modul Member --}}
-            <div class="col">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="step-number mb-3">2</div>
-                        <h3 class="h6 fw-bold mb-2">Keanggotaan (Member)</h3>
-                        <p class="text-secondary small mb-3">
-                            Kelola data member bulanan, registrasi kendaraan langganan, dan perpanjangan masa aktif kartu.
-                        </p>
-                        <a href="/member" class="text-brand fw-semibold small text-decoration-none">Kelola Member &rarr;</a>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Modul Tarif & Area --}}
-            <div class="col">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="step-number mb-3">3</div>
-                        <h3 class="h6 fw-bold mb-2">Tarif & Kapasitas</h3>
-                        <p class="text-secondary small mb-3">
-                            Atur skema tarif flat/progresif per jenis kendaraan serta batasan kapasitas area lokasi parkir.
-                        </p>
-                        <a href="/tarif" class="text-brand fw-semibold small text-decoration-none">Pengaturan Tarif &rarr;</a>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
 
-    {{-- Tabel Ringkasan Kendaraan Masuk Terakhir --}}
-    <section class="mb-5">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-body border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="h5 fw-bold mb-1">Aktivitas Parkir Terbaru</h2>
-                    <p class="text-secondary small mb-0">Daftar kendaraan yang baru masuk area parkir</p>
-                </div>
-                <a href="/transaksi/riwayat" class="btn btn-sm btn-outline-brand">Lihat Semua</a>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="ps-4">No. Karcis</th>
-                                <th>Plat Nomor</th>
-                                <th>Jenis Kendaraan</th>
-                                <th>Waktu Masuk</th>
-                                <th>Status</th>
-                                <th class="text-end pe-4">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="ps-4"><code class="inline">PKR-20260926-001</code></td>
-                                <td class="fw-bold">D 1829 SAK</td>
-                                <td><span class="badge bg-secondary-subtle text-secondary">Motor</span></td>
-                                <td class="small text-secondary">10:15 WIB</td>
-                                <td><span class="badge bg-warning-subtle text-warning-emphasis">Terparkir</span></td>
-                                <td class="text-end pe-4">
-                                    <a href="/transaksi/keluar?karcis=PKR-20260926-001" class="btn btn-sm btn-brand">Proses Keluar</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"><code class="inline">PKR-20260926-002</code></td>
-                                <td class="fw-bold">B 1024 RFD</td>
-                                <td><span class="badge bg-primary-subtle text-primary">Mobil</span></td>
-                                <td class="small text-secondary">10:02 WIB</td>
-                                <td><span class="badge bg-warning-subtle text-warning-emphasis">Terparkir</span></td>
-                                <td class="text-end pe-4">
-                                    <a href="/transaksi/keluar?karcis=PKR-20260926-002" class="btn btn-sm btn-brand">Proses Keluar</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"><code class="inline">PKR-20260926-003</code></td>
-                                <td class="fw-bold">D 4412 KC</td>
-                                <td><span class="badge bg-success-subtle text-success">Member Motor</span></td>
-                                <td class="small text-secondary">09:45 WIB</td>
-                                <td><span class="badge bg-warning-subtle text-warning-emphasis">Terparkir</span></td>
-                                <td class="text-end pe-4">
-                                    <a href="/transaksi/keluar?karcis=PKR-20260926-003" class="btn btn-sm btn-brand">Proses Keluar</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
+
+</section>
+
 
 @endsection
