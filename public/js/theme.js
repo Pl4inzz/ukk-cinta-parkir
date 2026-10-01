@@ -1,27 +1,59 @@
 /*
-| Toggle tema gelap/terang lewat klik logo (#themeToggle). Warna cincin logo
-| otomatis mengikuti [data-bs-theme] lewat CSS (lihat .logo-ring di app.css),
-| jadi di sini cukup ganti atribut & simpan pilihannya.
-|
-| Pemilihan awal (sebelum file ini dimuat) sudah diterapkan lewat script
-| kecil di <head> supaya tidak ada flash warna -- lihat layouts/app.sakuci.php.
+|--------------------------------------------------------------------------
+| EZPark Theme Toggle
+|--------------------------------------------------------------------------
+| Tombol utama : #themeToggle
+| Tombol mobile : #themeToggleMobile
+| Tema disimpan di localStorage dengan key "sakuci-theme".
+|--------------------------------------------------------------------------
 */
+
 (function () {
+    'use strict';
+
     var STORAGE_KEY = 'sakuci-theme';
     var root = document.documentElement;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var button = document.getElementById('themeToggle');
+    function toggleTheme() {
+        var current = root.getAttribute('data-bs-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
 
-        if (! button) {
-            return;
+        root.setAttribute('data-bs-theme', next);
+        localStorage.setItem(STORAGE_KEY, next);
+    }
+
+    function bindThemeButtons() {
+        var desktopButton = document.getElementById('themeToggle');
+        var mobileButton = document.getElementById('themeToggleMobile');
+
+        if (desktopButton && !desktopButton.dataset.themeBound) {
+            desktopButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleTheme();
+            });
+
+            desktopButton.dataset.themeBound = 'true';
         }
 
-        button.addEventListener('click', function () {
-            var next = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        if (mobileButton && !mobileButton.dataset.themeBound) {
+            mobileButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                toggleTheme();
+            });
 
-            root.setAttribute('data-bs-theme', next);
-            localStorage.setItem(STORAGE_KEY, next);
-        });
-    });
+            mobileButton.dataset.themeBound = 'true';
+        }
+    }
+
+    /*
+     * theme.js dimuat di bagian bawah body oleh app.sakuci.php,
+     * jadi tombol biasanya sudah tersedia saat script ini dijalankan.
+     */
+    bindThemeButtons();
+
+    /*
+     * Fallback kalau partial navbar diproses/dimasukkan setelah script.
+     */
+    document.addEventListener('DOMContentLoaded', bindThemeButtons);
 })();
