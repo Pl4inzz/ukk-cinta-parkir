@@ -112,7 +112,7 @@
                         <input
                             type="text"
                             id="id_user"
-                            value="{{ $users ? $users->nama_lengkap  : '-' }}"
+                            value="{{ $users ? $users->username  : '-' }}"
                             class="form-control"
                             readonly
                         >

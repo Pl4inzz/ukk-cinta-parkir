@@ -133,7 +133,7 @@
                 <!-- Menu Khusus Owner -->
                 @elseif ($currentUser->role === 'owner')
                     <li class="nav-item">
-                        <a href="{{ route('owner.laporan.index') }}" class="nav-link rounded-3 ">
+                        <a href="" class="nav-link rounded-3 ">
                             Rekap Laporan
                         </a>
                     </li>

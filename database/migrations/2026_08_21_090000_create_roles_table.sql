@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 -- Satu-satunya role bawaan. Role lain (staff, user, dst) dibuat sendiri
 -- oleh admin lewat /admin/roles -- middleware & route-nya otomatis dibuat.
-INSERT INTO `roles` (name, created_at, updated_at)
-SELECT * FROM (SELECT 'admin' AS name, NOW() AS created_at, NOW() AS updated_at) AS tmp
-WHERE NOT EXISTS (SELECT 1 FROM `roles` WHERE name = 'admin');
+INSERT INTO `roles`
+(`name`, `created_at`, `updated_at`, `can_register`)
+VALUES
+('owner', NOW(), NOW(), 0),
+('admin', NOW(), NOW(), 0),
+('petugas', NOW(), NOW(), 0);

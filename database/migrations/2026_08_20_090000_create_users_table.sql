@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- (hash dibuat dengan password_hash(), lihat /docs untuk penjelasan)
 -- Role lain (staff, user, dst) dibuat sendiri oleh admin lewat /admin/roles
 -- dan /admin/users setelah instalasi pertama.
-INSERT INTO `users` (username, password, role, created_at, updated_at)
-SELECT * FROM (SELECT 'admin' AS username, '$2y$10$2qINBU7JUITh89Z4fS3aR.F0nBgX5TD7hrg7lnGdDm3OW4jQU1t4q' AS password, 'admin' AS role, NOW() AS created_at, NOW() AS updated_at) AS tmp
-WHERE NOT EXISTS (SELECT 1 FROM `users` WHERE username = 'admin');
+INSERT INTO `users`
+(`id`, `username`, `nama_lengkap`, `password`, `role`, `created_at`, `updated_at`)
+VALUES
+(1, 'owner', 'Demo Owner', '$2y$12$ntn3LANEH6afERNoQs6vueMqxger3kP.hWMsMZDR9E.EnOsWC2xy6', 'owner', NOW(), NOW()),
+(2, 'admin', 'Demo Admin', '$2y$12$ntn3LANEH6afERNoQs6vueMqxger3kP.hWMsMZDR9E.EnOsWC2xy6', 'admin', NOW(), NOW()),
+(3, 'petugas', 'Demo Petugas', '$2y$12$ntn3LANEH6afERNoQs6vueMqxger3kP.hWMsMZDR9E.EnOsWC2xy6', 'petugas', NOW(), NOW());
