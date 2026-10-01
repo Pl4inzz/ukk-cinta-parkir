@@ -139,18 +139,14 @@ class AuthController extends Controller
          * Tentukan dashboard berdasarkan role
          */
         if ($user->role === 'admin') {
-
             $redirect = '/admin';
-
         } elseif ($user->role === 'petugas') {
-
             $redirect = '/petugas';
-
+        } elseif ($user->role === 'owner') {
+            $redirect = '/owner';
         } else {
-
             $redirect = '/dashboard';
         }
-
         return redirect($redirect)
             ->with(
                 'success',

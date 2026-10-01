@@ -97,6 +97,39 @@
         @endif
 
 
+        {{-- INFO DISKON MEMBER --}}
+        @if($transaksi->id_member)
+
+            <div class="alert alert-success mb-4">
+
+                <strong>
+                    🎉 Member mendapatkan diskon 20%
+                </strong>
+
+                <div class="small mt-1">
+                    Transaksi ini terdaftar sebagai member,
+                    sehingga mendapatkan potongan harga sebesar 20%.
+                </div>
+
+            </div>
+
+        @else
+
+            <div class="alert alert-secondary mb-4">
+
+                <strong>
+                    Non-Member
+                </strong>
+
+                <div class="small mt-1">
+                    Transaksi ini menggunakan tarif parkir normal.
+                </div>
+
+            </div>
+
+        @endif
+
+
         {{-- PLAT --}}
         <div class="mb-3">
 
@@ -224,26 +257,80 @@
         </div>
 
 
-        {{-- TOTAL --}}
-        <div class="alert alert-info mb-4">
+        {{-- RINCIAN BIAYA --}}
+        <div class="card border mb-4">
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="card-body">
 
-                <span>
-                    Total Biaya
-                </span>
+                <h6 class="mb-3">
+                    Rincian Pembayaran
+                </h6>
 
-                <strong class="fs-5">
 
-                    Rp
-                    {{ number_format(
-                        $biayaTotal,
-                        0,
-                        ',',
-                        '.'
-                    ) }}
+                {{-- BIAYA NORMAL --}}
+                <div class="d-flex justify-content-between mb-2">
 
-                </strong>
+                    <span>
+                        Biaya Normal
+                    </span>
+
+                    <strong>
+                        Rp {{ number_format(
+                            $biayaNormal,
+                            0,
+                            ',',
+                            '.'
+                        ) }}
+                    </strong>
+
+                </div>
+
+
+                {{-- DISKON --}}
+                @if($diskon > 0)
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <span class="text-success">
+                            Diskon Member (20%)
+                        </span>
+
+                        <strong class="text-success">
+                            - Rp {{ number_format(
+                                $diskon,
+                                0,
+                                ',',
+                                '.'
+                            ) }}
+                        </strong>
+
+                    </div>
+
+                @endif
+
+
+                <hr>
+
+
+                {{-- TOTAL --}}
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <span class="fw-bold">
+                        Total Bayar
+                    </span>
+
+                    <strong class="fs-4">
+
+                        Rp {{ number_format(
+                            $biayaTotal,
+                            0,
+                            ',',
+                            '.'
+                        ) }}
+
+                    </strong>
+
+                </div>
 
             </div>
 

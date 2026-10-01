@@ -287,21 +287,34 @@ public function storeMasuk(Request $request)
      */
     public function updateKeluar(Request $request, $id)
     {
-        $transaksi = Transaksi::where('id_parkir', $id)->first();
+        $transaksi = Transaksi::where(
+            'id_parkir',
+            $id
+        )->first();
 
         if (!$transaksi) {
             return redirect()
                 ->route('petugas.transaksi.index')
-                ->with('error', 'Data transaksi tidak ditemukan.');
+                ->with(
+                    'error',
+                    'Data transaksi tidak ditemukan.'
+                );
         }
 
         if ($transaksi->status !== 'masuk') {
             return redirect()
                 ->route('petugas.transaksi.index')
-                ->with('error', 'Transaksi ini sudah diproses keluar.');
+                ->with(
+                    'error',
+                    'Transaksi ini sudah diproses keluar.'
+                );
         }
 
-        // Ambil tarif yang sudah ditentukan saat kendaraan masuk
+
+        // =========================
+        // AMBIL TARIF
+        // =========================
+
         $tarif = Tarif::where(
             'id_tarif',
             $transaksi->id_tarif
@@ -310,28 +323,74 @@ public function storeMasuk(Request $request)
         if (!$tarif) {
             return redirect()
                 ->route('petugas.transaksi.index')
-                ->with('error', 'Tarif transaksi tidak ditemukan.');
+                ->with(
+                    'error',
+                    'Tarif transaksi tidak ditemukan.'
+                );
         }
 
-        // Waktu keluar ditentukan server
+
+        // =========================
+        // WAKTU KELUAR
+        // =========================
+
         $waktuKeluar = date('Y-m-d H:i:s');
 
-        // Hitung durasi
-        $waktuMasukTimestamp = strtotime($transaksi->waktu_masuk);
-        $waktuKeluarTimestamp = strtotime($waktuKeluar);
 
-        $selisihDetik = $waktuKeluarTimestamp - $waktuMasukTimestamp;
+        // =========================
+        // HITUNG DURASI
+        // =========================
 
-        $durasiJam = (int) ceil($selisihDetik / 3600);
+        $waktuMasukTimestamp = strtotime(
+            $transaksi->waktu_masuk
+        );
+
+        $waktuKeluarTimestamp = strtotime(
+            $waktuKeluar
+        );
+
+        $selisihDetik =
+            $waktuKeluarTimestamp -
+            $waktuMasukTimestamp;
+
+        $durasiJam = (int) ceil(
+            $selisihDetik / 3600
+        );
 
         if ($durasiJam < 1) {
             $durasiJam = 1;
         }
 
-        // Hitung biaya
-        $biayaTotal = $tarif->tarif_per_jam * $durasiJam;
 
-        // Update transaksi
+        // =========================
+        // HITUNG BIAYA
+        // =========================
+
+        $biayaNormal =
+            $tarif->tarif_per_jam *
+            $durasiJam;
+
+        $diskon = 0;
+
+
+        // Jika kendaraan merupakan member
+        // maka mendapatkan diskon 20%
+        if ($transaksi->id_member) {
+
+            $diskon =
+                $biayaNormal * 0.20;
+        }
+
+
+        // Biaya setelah diskon
+        $biayaTotal =
+            $biayaNormal - $diskon;
+
+
+        // =========================
+        // UPDATE TRANSAKSI
+        // =========================
+
         $transaksi->update([
             'waktu_keluar' => $waktuKeluar,
             'durasi_jam' => $durasiJam,
@@ -339,40 +398,58 @@ public function storeMasuk(Request $request)
             'status' => 'keluar',
         ]);
 
-        // Kurangi jumlah kendaraan di area
+
+        // =========================
+        // KURANGI JUMLAH TERISI
+        // =========================
+
         $area = AreaParkir::where(
             'id_area',
             $transaksi->id_area
         )->first();
 
         if ($area && $area->terisi > 0) {
+
             $area->update([
                 'terisi' => $area->terisi - 1
             ]);
         }
 
+
+        // =========================
+        // LOG AKTIVITAS
+        // =========================
+
         LogAktivitas::catat(
-        'PARKIR_KELUAR',
-        'Kendaraan ' .
-        $transaksi->plat_nomor .
-        ' keluar dari area ' .
-        ($area ? $area->nama_area : '-') .
-        ' setelah parkir ' .
-        $durasiJam .
-        ' jam dengan biaya Rp ' .
-        number_format(
-            $biayaTotal,
-            0,
-            ',',
+            'PARKIR_KELUAR',
+            'Kendaraan ' .
+            $transaksi->plat_nomor .
+            ' keluar dari area ' .
+            ($area ? $area->nama_area : '-') .
+            ' setelah parkir ' .
+            $durasiJam .
+            ' jam dengan biaya Rp ' .
+            number_format(
+                $biayaTotal,
+                0,
+                ',',
+                '.'
+            ) .
             '.'
-        ) .
-        '.'
-    );
+        );
+
+
+        // =========================
+        // CETAK STRUK
+        // =========================
 
         return redirect()
-            ->route('petugas.transaksi.cetakStruk', [
-                'id' => $transaksi->id_parkir
-            ])
+            ->route(
+                'petugas.transaksi.cetakStruk',
+                [
+                    'id' => $transaksi->id_parkir
+                ]
+            )
             ->with(
                 'success',
                 'Transaksi keluar berhasil diproses.'
@@ -402,85 +479,127 @@ public function storeMasuk(Request $request)
     /**
  * Form kendaraan keluar
  */
-public function editKeluar(Request $request, $id)
-{
-    $transaksi = Transaksi::where(
-        'id_parkir',
-        $id
-    )->first();
+    public function editKeluar(Request $request, $id)
+    {
+        $transaksi = Transaksi::where(
+            'id_parkir',
+            $id
+        )->first();
 
-    if (!$transaksi) {
-        return redirect()
-            ->route('petugas.transaksi.index')
-            ->with(
-                'error',
-                'Transaksi tidak ditemukan.'
-            );
+        if (!$transaksi) {
+            return redirect()
+                ->route('petugas.transaksi.index')
+                ->with(
+                    'error',
+                    'Transaksi tidak ditemukan.'
+                );
+        }
+
+
+        if ($transaksi->status !== 'masuk') {
+            return redirect()
+                ->route('petugas.transaksi.index')
+                ->with(
+                    'error',
+                    'Kendaraan sudah diproses keluar.'
+                );
+        }
+
+
+        // =========================
+        // WAKTU KELUAR
+        // =========================
+
+        $waktuKeluar = date(
+            'Y-m-d H:i:s'
+        );
+
+
+        // =========================
+        // HITUNG DURASI PARKIR
+        // =========================
+
+        $waktuMasukTimestamp = strtotime(
+            $transaksi->waktu_masuk
+        );
+
+        $waktuKeluarTimestamp = strtotime(
+            $waktuKeluar
+        );
+
+        $selisihDetik =
+            $waktuKeluarTimestamp -
+            $waktuMasukTimestamp;
+
+        $durasiJam = (int) ceil(
+            $selisihDetik / 3600
+        );
+
+        if ($durasiJam < 1) {
+            $durasiJam = 1;
+        }
+
+
+        // =========================
+        // AMBIL TARIF
+        // =========================
+
+        $tarif = Tarif::where(
+            'id_tarif',
+            $transaksi->id_tarif
+        )->first();
+
+        if (!$tarif) {
+            return redirect()
+                ->route('petugas.transaksi.index')
+                ->with(
+                    'error',
+                    'Tarif transaksi tidak ditemukan.'
+                );
+        }
+
+
+        // =========================
+        // HITUNG BIAYA
+        // =========================
+
+        $biayaNormal =
+            $tarif->tarif_per_jam *
+            $durasiJam;
+
+        $diskon = 0;
+
+
+        // Jika member mendapatkan
+        // diskon sebesar 20%
+        if ($transaksi->id_member) {
+
+            $diskon =
+                $biayaNormal * 0.20;
+        }
+
+
+        // Biaya akhir setelah diskon
+        $biayaTotal =
+            $biayaNormal - $diskon;
+
+
+        // =========================
+        // TAMPILKAN HALAMAN KELUAR
+        // =========================
+
+        return view(
+            'petugas.transaksi.keluar',
+            [
+                'transaksi' => $transaksi,
+                'waktuKeluar' => $waktuKeluar,
+                'durasiJam' => $durasiJam,
+                'tarif' => $tarif,
+
+                'biayaNormal' => $biayaNormal,
+                'diskon' => $diskon,
+                'biayaTotal' => $biayaTotal,
+            ]
+        );
     }
-
-    if ($transaksi->status !== 'masuk') {
-        return redirect()
-            ->route('petugas.transaksi.index')
-            ->with(
-                'error',
-                'Kendaraan sudah diproses keluar.'
-            );
-    }
-
-    // Waktu keluar ditentukan server
-    $waktuKeluar = date('Y-m-d H:i:s');
-
-    // Hitung durasi parkir
-    $waktuMasukTimestamp = strtotime(
-        $transaksi->waktu_masuk
-    );
-
-    $waktuKeluarTimestamp = strtotime(
-        $waktuKeluar
-    );
-
-    $selisihDetik =
-        $waktuKeluarTimestamp -
-        $waktuMasukTimestamp;
-
-    $durasiJam = (int) ceil(
-        $selisihDetik / 3600
-    );
-
-    if ($durasiJam < 1) {
-        $durasiJam = 1;
-    }
-
-    // Ambil tarif yang sudah disimpan
-    // ketika kendaraan masuk
-    $tarif = Tarif::where(
-        'id_tarif',
-        $transaksi->id_tarif
-    )->first();
-
-    if (!$tarif) {
-        return redirect()
-            ->route('petugas.transaksi.index')
-            ->with(
-                'error',
-                'Tarif transaksi tidak ditemukan.'
-            );
-    }
-
-    // Hitung total biaya
-    $biayaTotal =
-        $tarif->tarif_per_jam *
-        $durasiJam;
-
-    return view(
-        'petugas.transaksi.keluar',
-        [
-            'transaksi' => $transaksi,
-            'waktuKeluar' => $waktuKeluar,
-            'durasiJam' => $durasiJam,
-            'tarif' => $tarif,
-            'biayaTotal' => $biayaTotal,
-        ]
-    );
-}
 }

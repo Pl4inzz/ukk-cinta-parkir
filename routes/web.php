@@ -11,6 +11,7 @@ use App\Controllers\TransaksiController;
 use App\Controllers\MemberController;
 use App\Controllers\TarifController;
 use App\Controllers\LogAktivitasController;
+use App\Controllers\RekapController;
 use Sakuci\Route;
 
 /*
@@ -101,11 +102,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 */
 // @generated-roles:start
 
-// @role:owner:start
-Route::group(['prefix' => 'owner', 'middleware' => 'owner'], function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('owner.dashboard');
+Route::group(['prefix' => 'owner','middleware' => 'owner'
+], function () {
+
+    Route::get('/', [DashboardController::class, 'owner'])
+        ->name('owner.dashboard');
+
+    Route::get('/rekap', [RekapController::class, 'index'])
+        ->name('owner.rekap');
+
+    Route::get('/rekap/cetak', [RekapController::class, 'cetak'])
+        ->name('owner.rekap.cetak');
+
 });
-// @role:owner:end
 // @role:petugas:start
 Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
 

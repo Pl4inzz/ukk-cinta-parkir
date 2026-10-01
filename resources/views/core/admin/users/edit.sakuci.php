@@ -65,9 +65,22 @@
 <!-- Role -->
 <div class="mb-3">
     <label class="form-label" for="role">Role</label>
-    <input type="text" class="form-control" value="Petugas" readonly>
-    <input type="hidden" name="role" value="petugas">
+
+    <input
+        type="text"
+        class="form-control"
+        value="{{ ucfirst($user->role) }}"
+        readonly
+    >
+
+    <input
+        type="hidden"
+        name="role"
+        value="{{ $user->role }}"
+    >
 </div>
+
+<!-- Perubahan ini diubah oleh Hasan Asykari XII RPL 1, absen sekian, SMK Sangkuriang 1 Cimahi, Jl. Cibatu Cikupa, Ngamprah, Bandung Barat, @levtofer. --!>
 
                         <!-- Tombol Aksi -->
                         <div class="d-flex gap-2">
