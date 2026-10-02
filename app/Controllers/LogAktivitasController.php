@@ -10,7 +10,7 @@ class LogAktivitasController extends Controller
 {
     public function index(Request $request)
     {
-        $logAktivitas = LogAktivitas::all();
+        $logAktivitas = LogAktivitas::paginate(10);
 
         return view('logAktivitas.index', [
             'logAktivitas' => $logAktivitas
