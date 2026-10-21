@@ -207,26 +207,25 @@
                             </option>
 
                             <option
-                                value="motor"
-                                {{ old('jenis_kendaraan') === 'motor' ? 'selected' : '' }}
-                            >
-                                Motor
-                            </option>
+                            value="kecil"
+                            {{ old('jenis_kendaraan') === 'kecil' ? 'selected' : '' }}
+                        >
+                            Kecil
+                        </option>
 
-                            <option
-                                value="mobil"
-                                {{ old('jenis_kendaraan') === 'mobil' ? 'selected' : '' }}
-                            >
-                                Mobil
-                            </option>
+                        <option
+                            value="sedang"
+                            {{ old('jenis_kendaraan') === 'sedang' ? 'selected' : '' }}
+                        >
+                            Sedang
+                        </option>
 
-                            <option
-                                value="lainnya"
-                                {{ old('jenis_kendaraan') === 'lainnya' ? 'selected' : '' }}
-                            >
-                                Lainnya
-                            </option>
-
+                        <option
+                            value="besar"
+                            {{ old('jenis_kendaraan') === 'besar' ? 'selected' : '' }}
+                        >
+                            Besar
+                        </option>
                         </select>
 
                         @error('jenis_kendaraan')

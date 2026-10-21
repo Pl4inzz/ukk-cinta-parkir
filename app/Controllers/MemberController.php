@@ -38,7 +38,7 @@ class MemberController extends Controller
                 'required|min:3|max:15',
 
             'jenis_kendaraan' =>
-                'required|in:motor,mobil,lainnya',
+                'required|in:kecil,sedang,besar',
 
             'no_hp' =>
                 'nullable',

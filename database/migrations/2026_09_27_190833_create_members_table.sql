@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `member` (
     kode_member        VARCHAR(50) NOT NULL UNIQUE,
     nama               VARCHAR(255) NOT NULL,
     plat_nomor         VARCHAR(15) NOT NULL,
-    jenis_kendaraan    ENUM('motor', 'mobil', 'lainnya') NOT NULL DEFAULT 'motor',
+    jenis_kendaraan    VARCHAR(50) NOT NULL,
     no_hp              VARCHAR(20) NOT NULL,
     status_aktif       ENUM('aktif', 'nonaktif') NOT NULL DEFAULT 'aktif',
     tanggal_kadaluarsa DATE NOT NULL,

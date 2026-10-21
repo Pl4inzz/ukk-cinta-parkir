@@ -210,24 +210,24 @@
                             </option>
 
                             <option
-                                value="motor"
-                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'motor' ? 'selected' : '' }}
+                                value="kecil"
+                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'kecil' ? 'selected' : '' }}
                             >
-                                Motor
+                                Kecil
                             </option>
 
                             <option
-                                value="mobil"
-                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'mobil' ? 'selected' : '' }}
+                                value="sedang"
+                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'sedang' ? 'selected' : '' }}
                             >
-                                Mobil
+                                Sedang
                             </option>
 
                             <option
-                                value="lainnya"
-                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'lainnya' ? 'selected' : '' }}
+                                value="besar"
+                                {{ old('jenis_kendaraan', $member->jenis_kendaraan) === 'besar' ? 'selected' : '' }}
                             >
-                                Lainnya
+                                Besar
                             </option>
 
                         </select>
