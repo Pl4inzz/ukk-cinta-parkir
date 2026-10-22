@@ -83,6 +83,7 @@
                             value="{{ old('nama_area') }}"
                             placeholder="Contoh: Gedung A, Lantai 1"
                             class="form-control {{ errors()->has('nama_area') ? 'is-invalid' : '' }}"
+                            required
                         >
 
                         <small class="text-muted">
@@ -119,6 +120,7 @@
                                 min="0"
                                 step="1"
                                 class="form-control {{ errors()->has('kapasitas') ? 'is-invalid' : '' }}"
+                                required
                             >
 
                             <span class="input-group-text">
