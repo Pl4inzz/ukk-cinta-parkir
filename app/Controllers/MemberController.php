@@ -25,8 +25,10 @@ class MemberController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
+        // Validasi data dasar
         $data = $request->validate([
             'kode_member' =>
                 'required|max:50|unique:member,kode_member',
@@ -50,32 +52,32 @@ class MemberController extends Controller
                 'nullable|date',
         ]);
 
+        // Rapikan data
+        $data['kode_member'] = strtoupper(
+            trim($data['kode_member'])
+        );
 
-        /*
-         * Rapikan data sebelum disimpan
-         */
-        $data['kode_member'] =
-            strtoupper(
-                trim($data['kode_member'])
-            );
+        $data['plat_nomor'] = strtoupper(
+            preg_replace('/\s+/', ' ', trim($data['plat_nomor']))
+        );
 
-        $data['plat_nomor'] =
-            strtoupper(
-                trim($data['plat_nomor'])
-            );
+        // Validasi format plat nomor
+        if (!preg_match(
+            '/^[A-Z]{1,2}\s?\d{1,4}\s?[A-Z]{0,3}$/',
+            $data['plat_nomor']
+        )) {
+            return redirect()
+                ->back()
+                ->with('error', 'Format plat nomor tidak valid. Contoh: B 1234 XYZ.');
+        }
 
-
-        /*
-         * Cek plat nomor
-         * supaya tidak terdaftar di dua member
-         */
+        // Cek duplikasi plat nomor
         $memberTerdaftar = Member::where(
             'plat_nomor',
             $data['plat_nomor']
         )->first();
 
         if ($memberTerdaftar) {
-
             return redirect()
                 ->route('members.index')
                 ->with(
@@ -88,26 +90,15 @@ class MemberController extends Controller
                 );
         }
 
-
-        /*
-         * Pendaftar otomatis adalah
-         * user yang sedang login
-         */
+        // Ambil user yang sedang login
         $user = User::current();
 
-        $data['id_user'] =
-            $user ? $user->id : null;
+        $data['id_user'] = $user ? $user->id : null;
 
-
-        /*
-         * Simpan member
-         */
+        // Simpan member
         $member = Member::create($data);
 
-
-        /*
-         * Catat aktivitas
-         */
+        // Catat aktivitas
         LogAktivitas::catat(
             'CREATE',
             'Menambahkan member ' .
@@ -119,7 +110,6 @@ class MemberController extends Controller
             '.'
         );
 
-
         return redirect()
             ->route('members.index')
             ->with(
@@ -127,6 +117,7 @@ class MemberController extends Controller
                 'Member berhasil ditambahkan.'
             );
     }
+
 
 
     public function edit($id)
@@ -140,128 +131,118 @@ class MemberController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $member = Member::findOrFail($id);
 
+public function update(Request $request, $id)
+{
+    $member = Member::findOrFail($id);
 
-        /*
-         * Simpan data lama
-         * untuk kebutuhan log aktivitas
-         */
-        $namaLama = $member->nama;
-        $kodeLama = $member->kode_member;
-        $platLama = $member->plat_nomor;
+    // Simpan data lama untuk log aktivitas
+    $namaLama = $member->nama;
+    $kodeLama = $member->kode_member;
+    $platLama = $member->plat_nomor;
 
+    // Validasi data dasar
+    $data = $request->validate([
+        'kode_member' =>
+            'required|max:50|unique:member,kode_member,' .
+            $id .
+            ',id_member',
 
-        $data = $request->validate([
-            'kode_member' =>
-                'required|max:50|unique:member,kode_member,' .
-                $id .
-                ',id_member',
+        'nama' =>
+            'required|min:3|max:255',
 
-            'nama' =>
-                'required|min:3|max:255',
+        'plat_nomor' =>
+            'required|min:3|max:15',
 
-            'plat_nomor' =>
-                'required|min:3|max:15',
+        'jenis_kendaraan' =>
+            'required|in:kecil,sedang,besar',
 
-            'jenis_kendaraan' =>
-                'required|in:motor,mobil,lainnya',
+        'no_hp' =>
+            'nullable',
 
-            'no_hp' =>
-                'nullable',
+        'status_aktif' =>
+            'required|in:aktif,nonaktif',
 
-            'status_aktif' =>
-                'required|in:aktif,nonaktif',
+        'tanggal_kadaluarsa' =>
+            'nullable|date',
+    ]);
 
-            'tanggal_kadaluarsa' =>
-                'nullable|date',
-        ]);
+    // Rapikan data
+    $data['kode_member'] = strtoupper(
+        trim($data['kode_member'])
+    );
 
+    $data['plat_nomor'] = strtoupper(
+        preg_replace('/\s+/', ' ', trim($data['plat_nomor']))
+    );
 
-        /*
-         * Rapikan data
-         */
-        $data['kode_member'] =
-            strtoupper(
-                trim($data['kode_member'])
-            );
-
-        $data['plat_nomor'] =
-            strtoupper(
-                trim($data['plat_nomor'])
-            );
-
-
-        /*
-         * Cek apakah plat nomor
-         * sudah dipakai member lain
-         */
-        $memberTerdaftar = Member::where(
-            'plat_nomor',
-            $data['plat_nomor']
-        )->first();
-
-        if (
-            $memberTerdaftar &&
-            $memberTerdaftar->id_member != $id
-        ) {
-
-            return redirect()
-                ->route(
-                    'members.edit',
-                    ['id' => $id]
-                )
-                ->with(
-                    'error',
-                    'Plat nomor ' .
-                    $data['plat_nomor'] .
-                    ' sudah digunakan oleh member ' .
-                    $memberTerdaftar->nama .
-                    '.'
-                );
-        }
-
-
-        /*
-         * Jangan mengubah id_user
-         * saat edit.
-         */
-        unset($data['id_user']);
-
-
-        $member->update($data);
-
-
-        /*
-         * Catat aktivitas
-         */
-        LogAktivitas::catat(
-            'UPDATE',
-            'Mengubah member ' .
-            $namaLama .
-            ' (' .
-            $kodeLama .
-            ', ' .
-            $platLama .
-            ') menjadi ' .
-            $member->nama .
-            ' (' .
-            $member->kode_member .
-            ', ' .
-            $member->plat_nomor .
-            ').'
-        );
-
-
+    // Validasi format plat nomor
+    if (!preg_match(
+        '/^[A-Z]{1,2}\s?\d{1,4}\s?[A-Z]{0,3}$/',
+        $data['plat_nomor']
+    )) {
         return redirect()
-            ->route('members.index')
+            ->back()
+            ->with('error', 'Format plat nomor tidak valid. Contoh: B 1234 XYZ.');
+    }
+
+    // Cek apakah plat nomor digunakan member lain
+    $memberTerdaftar = Member::where(
+        'plat_nomor',
+        $data['plat_nomor']
+    )->first();
+
+    if (
+        $memberTerdaftar &&
+        $memberTerdaftar->id_member != $id
+    ) {
+        return redirect()
+            ->route(
+                'members.edit',
+                ['id' => $id]
+            )
             ->with(
-                'success',
-                'Data member berhasil diperbarui.'
+                'error',
+                'Plat nomor ' .
+                $data['plat_nomor'] .
+                ' sudah digunakan oleh member ' .
+                $memberTerdaftar->nama .
+                '.'
             );
     }
+
+    // Jangan mengubah id_user saat edit
+    unset($data['id_user']);
+
+    // Update data member
+    $member->update($data);
+
+    // Catat aktivitas
+    LogAktivitas::catat(
+        'UPDATE',
+        'Mengubah member ' .
+        $namaLama .
+        ' (' .
+        $kodeLama .
+        ', ' .
+        $platLama .
+        ') menjadi ' .
+        $member->nama .
+        ' (' .
+        $member->kode_member .
+        ', ' .
+        $member->plat_nomor .
+        ').'
+    );
+
+    return redirect()
+        ->route('members.index')
+        ->with(
+            'success',
+            'Data member berhasil diperbarui.'
+        );
+}
+
 
 
     public function destroy($id)

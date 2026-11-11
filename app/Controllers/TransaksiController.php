@@ -16,16 +16,17 @@ class TransaksiController extends Controller
     /**
      * Tampilkan daftar transaksi parkir (Aktif & Selesai)
      */
-     
     public function index(Request $request)
-{
-    // Menggunakan where pada kolom status yang memang ada di database
-    $transaksiList = Transaksi::whereIn('status', ['masuk', 'keluar'])->get();
+    {
+        $transaksiList = Transaksi::whereIn(
+            'status',
+            ['masuk', 'keluar']
+        )->get();
 
-    return view('petugas.transaksi.index', [
-        'transaksiList' => $transaksiList
-    ]);
-}
+        return view('petugas.transaksi.index', [
+            'transaksiList' => $transaksiList
+        ]);
+    }
 
     /**
      * Form kendaraan masuk
@@ -40,245 +41,269 @@ class TransaksiController extends Controller
             'areas' => $areas,
             'members' => $members,
             'tarifs' => $tarifs
-        ]); 
+        ]);
     }
+
     /**
      * Proses simpan transaksi parkir masuk
      */
-public function storeMasuk(Request $request)
-{
-    $user = User::current();
+    public function storeMasuk(Request $request)
+    {
+        $user = User::current();
 
-    if (!$user) {
-        return redirect()
-            ->route('petugas.transaksi.index')
-            ->with(
-                'error',
-                'Sesi pengguna tidak ditemukan.'
+        if (!$user) {
+            return redirect()
+                ->route('petugas.transaksi.index')
+                ->with(
+                    'error',
+                    'Sesi pengguna tidak ditemukan.'
+                );
+        }
+
+        // =========================
+        // VALIDASI INPUT
+        // =========================
+
+        $request->validate([
+            'id_member' => 'nullable',
+            'plat_nomor' => 'required|max:15',
+            'jenis_kendaraan' => 'required|max:50',
+            'id_area' => 'required',
+        ]);
+
+        // =========================
+        // NORMALISASI PLAT NOMOR
+        // =========================
+
+        $platNomor = strtoupper(
+            preg_replace(
+                '/\s+/',
+                ' ',
+                trim($request->input('plat_nomor'))
+            )
+        );
+
+        $member = null;
+
+        // =========================
+        // CEK MEMBER
+        // =========================
+
+        if ($request->input('id_member')) {
+
+            $member = Member::where(
+                'id_member',
+                $request->input('id_member')
+            )->first();
+
+            if (!$member) {
+                return redirect()
+                    ->route('petugas.transaksi.masuk')
+                    ->with(
+                        'error',
+                        'Member tidak ditemukan.'
+                    );
+            }
+
+            // Plat nomor mengikuti data member
+            $platNomor = strtoupper(
+                preg_replace(
+                    '/\s+/',
+                    ' ',
+                    trim($member->plat_nomor)
+                )
             );
-    }
 
-    // =========================
-    // VALIDASI INPUT
-    // =========================
+            // Jenis kendaraan mengikuti data member
+            $jenisKendaraan = $member->jenis_kendaraan;
 
-    $request->validate([
-        'id_member' => 'nullable',
-        'plat_nomor' => 'required|max:15',
-        'jenis_kendaraan' => 'required|max:50',
-        'id_area' => 'required',
-    ]);
+        } else {
 
-    // Rapikan plat nomor
-    $platNomor = strtoupper(
-        trim($request->input('plat_nomor'))
-    );
+            // =========================
+            // NON-MEMBER
+            // =========================
 
-    $member = null;
+            $jenisKendaraan =
+                $request->input('jenis_kendaraan');
 
-    // =========================
-    // CEK MEMBER
-    // =========================
+            // Cek apakah plat terdaftar sebagai member
+            $memberTerdaftar = Member::where(
+                'plat_nomor',
+                $platNomor
+            )->first();
 
-    if ($request->input('id_member')) {
+            if ($memberTerdaftar) {
+                return redirect()
+                    ->route('petugas.transaksi.masuk')
+                    ->with(
+                        'error',
+                        'Plat nomor ' .
+                        $platNomor .
+                        ' sudah terdaftar sebagai member ' .
+                        $memberTerdaftar->nama .
+                        '. Silakan pilih member tersebut.'
+                    );
+            }
+        }
 
-        $member = Member::where(
-            'id_member',
-            $request->input('id_member')
-        )->first();
+        // =========================
+        // VALIDASI FORMAT PLAT NOMOR
+        // =========================
 
-        if (!$member) {
-
+        if (!preg_match(
+            '/^[A-Z]{1,2}\s?\d{1,4}\s?[A-Z]{1,3}$/',
+            $platNomor
+        )) {
             return redirect()
                 ->route('petugas.transaksi.masuk')
                 ->with(
                     'error',
-                    'Member tidak ditemukan.'
+                    'Format plat nomor tidak valid. Contoh: B 1234 XYZ.'
                 );
         }
 
-        // Jika member dipilih,
-        // plat nomor mengikuti data member
-        $platNomor = strtoupper(
-            trim($member->plat_nomor)
-        );
-
-        // Jenis kendaraan juga mengikuti member
-        $jenisKendaraan = $member->jenis_kendaraan;
-
-    } else {
-
         // =========================
-        // NON-MEMBER
+        // CEK KENDARAAN MASIH PARKIR
         // =========================
 
-        $jenisKendaraan =
-            $request->input('jenis_kendaraan');
-
-        // Cek apakah nopol ternyata sudah
-        // terdaftar sebagai member
-        $memberTerdaftar = Member::where(
+        $transaksiAktif = Transaksi::where(
             'plat_nomor',
             $platNomor
-        )->first();
+        )
+        ->where(
+            'status',
+            'masuk'
+        )
+        ->first();
 
-        if ($memberTerdaftar) {
-
+        if ($transaksiAktif) {
             return redirect()
                 ->route('petugas.transaksi.masuk')
                 ->with(
                     'error',
-                    'Plat nomor ' .
+                    'Kendaraan dengan plat nomor ' .
                     $platNomor .
-                    ' sudah terdaftar sebagai member ' .
-                    $memberTerdaftar->nama .
-                    '. Silakan pilih member tersebut.'
+                    ' masih berada di area parkir.'
                 );
         }
-    }
 
-    // =========================
-    // CEK KENDARAAN MASIH PARKIR
-    // =========================
+        // =========================
+        // CEK AREA PARKIR
+        // =========================
 
-    $transaksiAktif = Transaksi::where(
-        'plat_nomor',
-        $platNomor
-    )
-    ->where(
-        'status',
-        'masuk'
-    )
-    ->first();
+        $area = AreaParkir::where(
+            'id_area',
+            $request->input('id_area')
+        )->first();
 
-    if ($transaksiAktif) {
+        if (!$area) {
+            return redirect()
+                ->route('petugas.transaksi.masuk')
+                ->with(
+                    'error',
+                    'Area parkir tidak ditemukan.'
+                );
+        }
 
-        return redirect()
-            ->route('petugas.transaksi.masuk')
-            ->with(
-                'error',
-                'Kendaraan dengan plat nomor ' .
-                $platNomor .
-                ' masih berada di area parkir.'
-            );
-    }
+        // Cek kapasitas area
+        if ($area->terisi >= $area->kapasitas) {
+            return redirect()
+                ->route('petugas.transaksi.masuk')
+                ->with(
+                    'error',
+                    'Area parkir ' .
+                    $area->nama_area .
+                    ' sudah penuh.'
+                );
+        }
 
-    // =========================
-    // CEK AREA PARKIR
-    // =========================
+        // =========================
+        // CARI TARIF
+        // =========================
 
-    $area = AreaParkir::where(
-        'id_area',
-        $request->input('id_area')
-    )->first();
+        $tarif = Tarif::where(
+            'jenis_kendaraan',
+            $jenisKendaraan
+        )->first();
 
-    if (!$area) {
+        if (!$tarif) {
+            return redirect()
+                ->route('petugas.transaksi.masuk')
+                ->with(
+                    'error',
+                    'Tarif untuk kendaraan ' .
+                    $jenisKendaraan .
+                    ' belum tersedia.'
+                );
+        }
 
-        return redirect()
-            ->route('petugas.transaksi.masuk')
-            ->with(
-                'error',
-                'Area parkir tidak ditemukan.'
-            );
-    }
+        // =========================
+        // BUAT TRANSAKSI
+        // =========================
 
-    // Cek kapasitas
-    if ($area->terisi >= $area->kapasitas) {
+        $transaksi = Transaksi::create([
+            'id_user' => $user->id,
 
-        return redirect()
-            ->route('petugas.transaksi.masuk')
-            ->with(
-                'error',
-                'Area parkir ' .
-                $area->nama_area .
-                ' sudah penuh.'
-            );
-    }
+            'id_member' => $member
+                ? $member->id_member
+                : null,
 
-    // =========================
-    // CARI TARIF
-    // =========================
+            'plat_nomor' => $platNomor,
 
-    $tarif = Tarif::where(
-        'jenis_kendaraan',
-        $jenisKendaraan
-    )->first();
+            'id_area' => $area->id_area,
 
-    if (!$tarif) {
+            'id_tarif' => $tarif->id_tarif,
 
-        return redirect()
-            ->route('petugas.transaksi.masuk')
-            ->with(
-                'error',
-                'Tarif untuk kendaraan ' .
-                $jenisKendaraan .
-                ' belum tersedia.'
-            );
-    }
+            'durasi_jam' => 0,
 
-    // =========================
-    // BUAT TRANSAKSI
-    // =========================
+            'biaya_total' => 0,
 
-    $transaksi = Transaksi::create([
-        'id_user' => $user->id,
+            'waktu_masuk' => date('Y-m-d H:i:s'),
 
-        'id_member' => $member
-            ? $member->id_member
-            : null,
+            'waktu_keluar' => null,
 
-        'plat_nomor' => $platNomor,
+            'status' => 'masuk',
+        ]);
 
-        'id_area' => $area->id_area,
+        // =========================
+        // TAMBAH JUMLAH TERISI
+        // =========================
 
-        'id_tarif' => $tarif->id_tarif,
+        $area->update([
+            'terisi' => $area->terisi + 1
+        ]);
 
-        'durasi_jam' => 0,
+        // =========================
+        // LOG AKTIVITAS
+        // =========================
 
-        'biaya_total' => 0,
-
-        'waktu_masuk' => date('Y-m-d H:i:s'),
-
-        'waktu_keluar' => null,
-
-        'status' => 'masuk',
-    ]);
-
-    // =========================
-    // TAMBAH JUMLAH TERISI
-    // =========================
-
-    $area->update([
-        'terisi' => $area->terisi + 1
-    ]);
-
-    LogAktivitas::catat(
-    'PARKIR_MASUK',
-    'Kendaraan ' .
-    $platNomor .
-    ' masuk ke area ' .
-    $area->nama_area .
-    ' (' .
-    $jenisKendaraan .
-    ').'
-);
-
-    // =========================
-    // CETAK TIKET
-    // =========================
-
-    return redirect()
-        ->route(
-            'petugas.transaksi.cetakTiket',
-            [
-                'id' => $transaksi->id_parkir
-            ]
-        )
-        ->with(
-            'success',
-            'Berhasil mencatat kendaraan masuk!'
+        LogAktivitas::catat(
+            'PARKIR_MASUK',
+            'Kendaraan ' .
+            $platNomor .
+            ' masuk ke area ' .
+            $area->nama_area .
+            ' (' .
+            $jenisKendaraan .
+            ').'
         );
-}
+
+        // =========================
+        // CETAK TIKET
+        // =========================
+
+        return redirect()
+            ->route(
+                'petugas.transaksi.cetakTiket',
+                [
+                    'id' => $transaksi->id_parkir
+                ]
+            )
+            ->with(
+                'success',
+                'Berhasil mencatat kendaraan masuk!'
+            );
+    }
 
     /**
      * Proses simpan transaksi parkir keluar
@@ -308,7 +333,6 @@ public function storeMasuk(Request $request)
                 );
         }
 
-
         // =========================
         // AMBIL TARIF
         // =========================
@@ -327,13 +351,11 @@ public function storeMasuk(Request $request)
                 );
         }
 
-
         // =========================
         // WAKTU KELUAR
         // =========================
 
         $waktuKeluar = date('Y-m-d H:i:s');
-
 
         // =========================
         // HITUNG DURASI
@@ -359,7 +381,6 @@ public function storeMasuk(Request $request)
             $durasiJam = 1;
         }
 
-
         // =========================
         // HITUNG BIAYA
         // =========================
@@ -370,20 +391,14 @@ public function storeMasuk(Request $request)
 
         $diskon = 0;
 
-
-        // Jika kendaraan merupakan member
-        // maka mendapatkan diskon 20%
+        // Member mendapatkan diskon 20%
         if ($transaksi->id_member) {
-
-            $diskon =
-                $biayaNormal * 0.20;
+            $diskon = $biayaNormal * 0.20;
         }
-
 
         // Biaya setelah diskon
         $biayaTotal =
             $biayaNormal - $diskon;
-
 
         // =========================
         // UPDATE TRANSAKSI
@@ -396,7 +411,6 @@ public function storeMasuk(Request $request)
             'status' => 'keluar',
         ]);
 
-
         // =========================
         // KURANGI JUMLAH TERISI
         // =========================
@@ -407,12 +421,10 @@ public function storeMasuk(Request $request)
         )->first();
 
         if ($area && $area->terisi > 0) {
-
             $area->update([
                 'terisi' => $area->terisi - 1
             ]);
         }
-
 
         // =========================
         // LOG AKTIVITAS
@@ -436,7 +448,6 @@ public function storeMasuk(Request $request)
             '.'
         );
 
-
         // =========================
         // CETAK STRUK
         // =========================
@@ -455,28 +466,44 @@ public function storeMasuk(Request $request)
     }
 
     /**
-     * Tampilan cetak tiket parkir (Saat masuk)
+     * Tampilan cetak tiket parkir
      */
     public function cetakTiket(Request $request, $id)
     {
-        // ✅ Ganti Transaksi::find($id)
-        $transaksi = Transaksi::where('id_parkir', $id)->first();
-        return view('petugas.transaksi.cetak_tiket', ['transaksi' => $transaksi]);
+        $transaksi = Transaksi::where(
+            'id_parkir',
+            $id
+        )->first();
+
+        return view(
+            'petugas.transaksi.cetak_tiket',
+            [
+                'transaksi' => $transaksi
+            ]
+        );
     }
 
     /**
-     * Tampilan cetak struk pembayarannya (Saat keluar)
+     * Tampilan cetak struk pembayaran
      */
     public function cetakStruk(Request $request, $id)
     {
-        // ✅ Ganti Transaksi::find($id)
-        $transaksi = Transaksi::where('id_parkir', $id)->first();
-        return view('petugas.transaksi.cetak_struk', ['transaksi' => $transaksi]);
+        $transaksi = Transaksi::where(
+            'id_parkir',
+            $id
+        )->first();
+
+        return view(
+            'petugas.transaksi.cetak_struk',
+            [
+                'transaksi' => $transaksi
+            ]
+        );
     }
 
     /**
- * Form kendaraan keluar
- */
+     * Form kendaraan keluar
+     */
     public function editKeluar(Request $request, $id)
     {
         $transaksi = Transaksi::where(
@@ -493,7 +520,6 @@ public function storeMasuk(Request $request)
                 );
         }
 
-
         if ($transaksi->status !== 'masuk') {
             return redirect()
                 ->route('petugas.transaksi.index')
@@ -503,15 +529,11 @@ public function storeMasuk(Request $request)
                 );
         }
 
-
         // =========================
         // WAKTU KELUAR
         // =========================
 
-        $waktuKeluar = date(
-            'Y-m-d H:i:s'
-        );
-
+        $waktuKeluar = date('Y-m-d H:i:s');
 
         // =========================
         // HITUNG DURASI PARKIR
@@ -537,7 +559,6 @@ public function storeMasuk(Request $request)
             $durasiJam = 1;
         }
 
-
         // =========================
         // AMBIL TARIF
         // =========================
@@ -556,7 +577,6 @@ public function storeMasuk(Request $request)
                 );
         }
 
-
         // =========================
         // HITUNG BIAYA
         // =========================
@@ -567,20 +587,14 @@ public function storeMasuk(Request $request)
 
         $diskon = 0;
 
-
-        // Jika member mendapatkan
-        // diskon sebesar 20%
+        // Member mendapatkan diskon 20%
         if ($transaksi->id_member) {
-
-            $diskon =
-                $biayaNormal * 0.20;
+            $diskon = $biayaNormal * 0.20;
         }
-
 
         // Biaya akhir setelah diskon
         $biayaTotal =
             $biayaNormal - $diskon;
-
 
         // =========================
         // TAMPILKAN HALAMAN KELUAR
@@ -593,7 +607,6 @@ public function storeMasuk(Request $request)
                 'waktuKeluar' => $waktuKeluar,
                 'durasiJam' => $durasiJam,
                 'tarif' => $tarif,
-
                 'biayaNormal' => $biayaNormal,
                 'diskon' => $diskon,
                 'biayaTotal' => $biayaTotal,

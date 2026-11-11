@@ -172,12 +172,12 @@
 
                         <input
                             type="text"
-                            id="plat_nomor"
                             name="plat_nomor"
-                            value="{{ old('plat_nomor', $member->plat_nomor) }}"
-                            placeholder="Contoh: B 1234 ABC"
-                            maxlength="15"
-                            class="form-control {{ errors()->has('plat_nomor') ? 'is-invalid' : '' }}"
+                            class="form-control"
+                            maxlength="12"
+                            placeholder="Contoh: B 1234 XYZ"
+                            pattern="[A-Za-z]{1,2}\s?[0-9]{1,4}\s?[A-Za-z]{0,3}"
+                            title="Format plat nomor: B 1234 XYZ"
                         >
 
                         @error('plat_nomor')

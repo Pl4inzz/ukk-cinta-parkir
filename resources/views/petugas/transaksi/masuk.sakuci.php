@@ -125,6 +125,8 @@
                             class="form-control"
                             maxlength="15"
                             placeholder="Contoh: B 1234 XYZ"
+                            pattern="[A-Za-z]{1,2}\s?[0-9]{1,4}\s?[A-Za-z]{1,3}"
+                            title="Format plat nomor tidak valid. Contoh: B 1234 XYZ."
                             required
                         >
 
