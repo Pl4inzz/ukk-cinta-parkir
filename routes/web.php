@@ -24,6 +24,7 @@ use Sakuci\Route;
 |   [HomeController::class, 'index']   -> disarankan
 |   'HomeController@index'             -> namespace App\Controllers otomatis
 |   function () { ... }                -> closure
+|  testunggsad
 */
 
 Route::get('/', function () {
