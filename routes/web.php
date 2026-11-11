@@ -43,9 +43,6 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middl
 Route::post('/login', [AuthController::class, 'login'])->name('login.attempt')->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
-Route::post('/register', [AuthController::class, 'register'])->name('register.attempt')->middleware('guest');
-
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {

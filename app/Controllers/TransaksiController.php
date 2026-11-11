@@ -16,9 +16,7 @@ class TransaksiController extends Controller
     /**
      * Tampilkan daftar transaksi parkir (Aktif & Selesai)
      */
-/**
- * Tampilkan daftar transaksi parkir (Aktif & Selesai)
- */
+     
     public function index(Request $request)
 {
     // Menggunakan where pada kolom status yang memang ada di database
