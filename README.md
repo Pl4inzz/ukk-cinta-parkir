@@ -49,13 +49,13 @@ Gunakan akun berikut untuk mencoba aplikasi:
 1. Clone repository ini:
 
    ```bash
-   git clone URL_REPOSITORY
+   git clone github.com/Pl4inzz/ukk-cinta-parkir
    ```
 
 2. Masuk ke direktori project:
 
    ```bash
-   cd EZPark
+   cd ukk-cinta-parkir
    ```
 
 3. Siapkan database MySQL dengan nama database yang digunakan oleh konfigurasi aplikasi.
