@@ -1,4 +1,4 @@
-﻿# Contoh CRUD Lengkap: User
+# Contoh CRUD Lengkap: User
 
 Panduan membuat aplikasi User management dengan Model, Controller, View, dan Route.
 
